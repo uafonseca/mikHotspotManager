@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% form_theme form '@AdminLTE/layout/form-theme.html.twig' %}
+{% block title %}New Router{% endblock %}
+
+{% block page_content_before %}
+<section class="content">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-7">
+                    {{ include('router/_form.html.twig') }}
+                    <p><span id="status" class="text-success"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block javascripts %}
+{{parent()}}
+<script>
+    $(document).ready(function(){
+        $('.ping').on('click', function(event){
+            event.preventDefault();
+            const scope = $(this);
+            $.ajax({
+                url: '{{path("routerOs-connect")}}',
+                type:'POST',
+                data : {
+                    ip : $('#router_ip').val(),
+                    user : $('#router_username').val(),
+                    password : $('#router_password').val(),
+                },
+                success: (response) => {
+                    if(response.status == 200){
+                        scope.after( $( "<span><i class='fa fa-check'></i></span>" ));
+                        $('#status').html(response.message)
+                    }
+                }
+            });
+        })
+    })
+</script>
+{% endblock %}

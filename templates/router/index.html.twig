@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Router index{% endblock %}
+
+{% block page_content_before %}
+    <h1>Router index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>RouterName</th>
+                <th>Ip</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for router in routers %}
+            <tr>
+                <td>{{ router.id }}</td>
+                <td>{{ router.routerName }}</td>
+                <td>{{ router.ip }}</td>
+                <td>{{ router.username }}</td>
+                <td>{{ router.password }}</td>
+                <td>
+                    <a href="{{ path('router_show', {'id': router.id}) }}">show</a>
+                    <a href="{{ path('router_edit', {'id': router.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('router_new') }}">Create new</a>
+{% endblock %}

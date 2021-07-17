@@ -1,0 +1,10 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button type="submit" class="btn btn-primary">
+    <i class="fa fa-save"></i>
+    {{ button_label|default('Guardar') }}
+</button>
+{% if exist %}
+    <a href="#"  class="ping btn btn-warning ml-5"><i class="fa fa-link"></i>  PING</a>
+{% endif %}
+{{ form_end(form) }}
