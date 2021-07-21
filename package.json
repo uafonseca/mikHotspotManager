@@ -16,6 +16,13 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "bootstrap": "^5.0.2"
+        "bootstrap": "^5.0.2",
+        "datatables.net": "^1.10.25",
+        "datatables.net-buttons-bs4": "^1.7.1",
+        "datatables.net-dt": "^1.1.0",
+        "jquery": "^3.6.0",
+        "jquery-confirm": "^3.3.4",
+        "tippy.js": "^6.3.1",
+        "toastr": "^2.1.4"
     }
 }

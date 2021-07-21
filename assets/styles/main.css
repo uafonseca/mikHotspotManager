@@ -1,0 +1,48 @@
+body {
+    font-size: 14px;
+}
+.dataTables_wrapper .dataTables_filter{
+    float: right;
+}
+.table-responsive{
+    overflow: visible;
+    /*height: auto;!important;*/
+}
+.dataTables_paginate{
+    text-align: right;
+}
+.paginate_button{
+    position: relative;
+    /*display: block;*/
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-top-color: rgb(222, 226, 230);
+    border-right-color: rgb(222, 226, 230);
+    border-bottom-color: rgb(222, 226, 230);
+    border-left-color: rgb(222, 226, 230);
+    /*width: auto;*/
+}
+div.dataTables_wrapper div.dataTables_paginate {
+    margin: 13px;
+    white-space: nowrap;
+    text-align: right;
+}
+th.dt-center, td.dt-center { text-align: center; }
+
+.required:after {
+    content:" *";
+    color: red;
+  }
+
+  .jconfirm-box-container{
+      align-items: center!important;
+  }
+  .disabled{
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+  }

@@ -26,7 +26,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
         
         $menu->addChild('dashboard', [
             'route' => 'home',
-            'label' => 'Dashboard',
+            'label' => 'DASHBOARD',
             'childOptions' => $event->getChildOptions(),
             // 'extras' => [
             //     'badge' => [
@@ -38,16 +38,46 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
 
         $menu->addChild('router', [
             'route' => 'router_new',
-            'label' => 'Router',
+            'label' => 'CONFIGURACIÓN',
             'childOptions' => $event->getChildOptions(),
-            // 'extras' => [
-            //     'badge' => [
-            //         'color' => 'yellow',
-            //         'value' => 4,
-            //     ],
-            // ],
-        ])->setLabelAttribute('icon', 'fas fa-wifi');
+        ])->setLabelAttribute('icon', 'fas fa-cog');
+
+        $menu->addChild('users',[
+            'label' => 'CLIENTES',
+            'route' => 'user_new',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas fa-users');
+
+        $menu->getChild('users')->addChild('users_add',[
+            'label' => 'ADICIONAR',
+            'route' => 'user_new',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas fa-user-plus');
+
+        $menu->getChild('users')->addChild('users_list',[
+            'label' => 'LISTADO',
+            'route' => 'user_index',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas fa-list');
         
-       
+        $menu->addChild('profile',[
+            'label' => 'PERFILES',
+            'route' => 'user_profile_index',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas  fa-id-card');
+
+        $menu->getChild('profile')->addChild('user_profile_new',[
+            'label' => 'ADICIONAR',
+            'route' => 'user_profile_new',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas fa-plus');
+        
+        $menu->getChild('profile')->addChild('user_profile_index',[
+            'label' => 'LISTADO',
+            'route' => 'user_profile_index',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fas fa-list');
+
+        
     }
 }

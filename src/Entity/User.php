@@ -3,15 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Traits\BlameableEntityTrait;
+use App\Traits\TimestampableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"username"}, message="Existe un usuario registrado con este nombre")
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use BlameableEntityTrait;
+    use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -21,6 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Por favor ingrese un usuario")
      */
     private $username;
 
@@ -34,6 +45,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="boolean", nullable =true)
+     */
+    private $isLocal = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=UserProfile::class, inversedBy="users")
+     */
+    private $profile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mikId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Package::class, mappedBy="user")
+     */
+    private $packs;
+
+    public function __construct()
+    {
+        $this->packs = new ArrayCollection();
+    }
+
+   
 
     public function getId(): ?int
     {
@@ -63,6 +106,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $role
+     * @return void
+     */
+    public function addRole(string $role){
+        if(!in_array($role, $this->roles)){
+            $roles = $role;
+        }
     }
 
     /**
@@ -118,4 +173,84 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    public function getIsLocal(): ?bool
+    {
+        return $this->isLocal;
+    }
+
+    public function setIsLocal(bool $isLocal): self
+    {
+        $this->isLocal = $isLocal;
+
+        return $this;
+    }
+
+    public function getProfile(): ?UserProfile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?UserProfile $profile): self
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getMikId(): ?string
+    {
+        return $this->mikId;
+    }
+
+    public function setMikId(?string $mikId): self
+    {
+        $this->mikId = $mikId;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Package[]
+     */
+    public function getPacks(): Collection
+    {
+        return $this->packs;
+    }
+
+    public function addPack(Package $pack): self
+    {
+        if (!$this->packs->contains($pack)) {
+            $this->packs[] = $pack;
+            $pack->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePack(Package $pack): self
+    {
+        if ($this->packs->removeElement($pack)) {
+            // set the owning side to null (unless already changed)
+            if ($pack->getUser() === $this) {
+                $pack->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

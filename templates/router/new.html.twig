@@ -3,39 +3,64 @@
 {% block title %}New Router{% endblock %}
 
 {% block page_content_before %}
-<section class="content">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-7">
-                    {{ include('router/_form.html.twig') }}
-                    <p><span id="status" class="text-success"></span></p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title"><i class="fa fa-cog"></i> Configuración del Router MIKROTICK</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {{ include('router/_form.html.twig') }}
+                        <p><span id="status" class="text-success"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title"><i class="fa fa-download"></i> Sincronización de datos</p>
+                </div>
+                <div class="card-body">
+                    <p>Esta acción es necesaria para sincronizar los datos almacenados en el Router, en caso de que se administrara el hotspot con cualquier otra herramienta, incluido WinBox</p>
+                    <a href="#" class="sync btn btn-warning"> <i class="fa fa-exclamation-triangle"></i> Sincronizar datos</a>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}
 
 
 {% block javascripts %}
 {{parent()}}
 <script>
-    $(document).ready(function(){
-        $('.ping').on('click', function(event){
+    $(document).ready(function () {
+        $('.sync').on('click', function (event) {
+             event.preventDefault();
+             $.ajax({
+                 url: Routing.generate('routerOs-sync-users'),
+                 success :(response) => {
+                     alert('OK')
+                 }
+             });
+        })
+        $('.ping').on('click', function (event) {
             event.preventDefault();
             const scope = $(this);
             $.ajax({
                 url: '{{path("routerOs-connect")}}',
-                type:'POST',
-                data : {
-                    ip : $('#router_ip').val(),
-                    user : $('#router_username').val(),
-                    password : $('#router_password').val(),
+                type: 'POST',
+                data: {
+                    ip: $('#router_ip').val(),
+                    user: $('#router_username').val(),
+                    password: $('#router_password').val(),
                 },
                 success: (response) => {
-                    if(response.status == 200){
-                        scope.after( $( "<span><i class='fa fa-check'></i></span>" ));
+                    if (response.status == 200) {
+                        scope.after($("<span><i class='fa fa-check'></i></span>"));
                         $('#status').html(response.message)
                     }
                 }

@@ -24,7 +24,10 @@ class UserFixtures extends Fixture
              $user,
              '1234'
          ))
-         ->setUsername('admin');
+         ->setUsername('administrator')
+         ->setIsLocal(true)
+         ->addRole('ROLE_SUPER_ADMIN')
+         ;
 
           
          $manager->persist($user);

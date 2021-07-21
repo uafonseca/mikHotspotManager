@@ -1,7 +1,224 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block page_content_before %}
-    
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3 id="trafic-up">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </h3>
+
+                    <p>Velocidad de bajada</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </div>
+                <a href="#" class="small-box-footer">Portal1
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3 id="trafic-down">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </h3>
+
+                    <p>Velocidad de subida</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-arrow-circle-up"></i>
+                </div>
+                <a href="#" class="small-box-footer">Portal1</a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3 id="today">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </h3>
+
+                    <p>Ingresos hoy</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-money-bill"></i>
+                </div>
+                <a href="#" class="small-box-footer">Detalles
+                    <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 id="this-month">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </h3>
+
+                    <p>Ingresos este mes</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-money-bill-alt"></i>
+                </div>
+                <a href="#" class="small-box-footer">Detalles
+                    <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>
+                                <i class="fa fa-users"></i> Usuarios en línea
+                            </h3>
+                        </div>
+                        <div class="col-md-6">
+                            <a data-tippy-content="Adicionar usuario" href="{{path('user_new')}}" class="user btn btn-primary pull-right"
+                                style="margin-right: 10px;"><i class="fa fa-user-plus"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <table id="table" class="table table-hover table-responsive table-sm">
+                        <thead>
+                            <tr>
+                                <th> <i class="fa fa-user text-primary"></i> CLIENTE</th>
+                                <th><i class="fa fa-keyboard text-secondary"></i> IP</th>
+                                <th><i class="fa fa-address-book text-warning"></i> MAC</th>
+                                <th class="text-right"><i class="fa fa-clock text-info"></i> CONEXIÓN</th>
+                                <!-- <th class="text-right">BYTES <i class="fa fa-arrow-up text-success"></i></th> -->
+                                <th class="text-right">BYTES <i class="fa fa-arrow-down text-danger"></i> </th>
+                                <th class="text-right"><i class="fa fa-clock text-warning"></i> RESTANTE</th>
+                                <th><i class="fa fa-key text-success"></i> LOGIN</th>
+                                <th><i class="fa fa-tasks text-success"></i> ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <i class="fa fa-list"></i> Actividad reciente
+                    </h3>
+                </div>
+                <div id="logs" class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    jQuery(function () {
+        setInterval(getData, 3000);
+        setInterval(getlogs, 3000);
+        finance();
+        setInterval(finance, 30000);
+        var table = $('#table').DataTable({
+            "ajax": Routing.generate('routerOs-active'),
+            "columnDefs": [
+                {
+                    "className": "dt-center",
+                    "targets": "_all"
+                },
+            ],
+        });
+        $('#table').on('click','.add-time', function(event){
+            event.preventDefault();
+            const scope = $(this)
+            app.dialogs.create({
+                url: Routing.generate('routerOs-add-time',{id:scope.data('user-id')}),
+                columnClass:'col-md-4'
+            })
+        })
+        setInterval(function () {
+            table.ajax.reload(function(){
+                Tippy('[data-tippy-content]', {
+                    duration: [10, 10],
+                })
+            });
+        }, 5000);
+        $('.time').on('click', function (event) {
+            event.preventDefault();
+            app.dialogs.create({
+                url: Routing.generate('routerOs-add-time'),
+                'containerFluid': true
+            })
+        })
+    })
+    function finance(){
+        $.ajax({
+            url: Routing.generate('user_finance-today'),
+            type: 'POST',
+            success: (response) => {
+                $('#today').html('$'+response.today[1])
+                $('#this-month').html('$'+response.thisMonth[1])
+            }
+        });
+    }
+    function getData() {
+        $.ajax({
+            url: Routing.generate('routerOs-trafic'),
+            type: 'POST',
+            success: (response) => {
+                let bytesTx = response[0].data[0];
+                let bytesRx = response[1].data[0];
+                $('#trafic-up').html(bytesToSize(bytesRx))
+                $('#trafic-down').html(bytesToSize(bytesTx))
+            }
+        });
+    }
+    function getlogs() {
+        $.ajax({
+            url: Routing.generate('routerOs-logs'),
+            type: 'POST',
+            success: (response) => {
+                $('#logs').html(response)
+            }
+        });
+    }
+    function bytesToSize(bytes) {
+        let sizes = [
+            'bps',
+            'kbps',
+            'Mbps',
+            'Gbps',
+            'Tbps'
+        ];
+        if (bytes == 0)
+            return '0 Byte';
+
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+</script>
 {% endblock %}

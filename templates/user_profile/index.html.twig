@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserProfile index{% endblock %}
+
+{% block page_content_before %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+                <a href="{{ path('user_profile_new') }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i>  Nuevo perfil</a>
+            </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>AddresPool</th>
+                            <th>RateLimit</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user_profile in user_profiles %}
+                        <tr>
+                            <td>{{ user_profile.name }}</td>
+                            <td>{{ user_profile.addresPool }}</td>
+                            <td>{{ user_profile.rateLimit }}</td>
+                            <td>{{ user_profile.price }}</td>
+                            <td>
+                                <a class="btn btn-warning" href="{{ path('user_profile_edit', {'id': user_profile.id}) }}"><i class="fa fa-pencil-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6">no records found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

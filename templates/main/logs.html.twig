@@ -1,0 +1,18 @@
+<table id="table" class="table table-hover table-responsive table-sm">
+    <thead>
+        <tr>
+            <th>HORA</th>
+            <!-- <th>IP</th> -->
+            <th><i class="fa fa-envelope text-warning"></i> MENSAJE</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in logs %}
+            <tr>
+                <td>{{row['time']}}</td>
+                
+                <td>{{row['message']|replace({'->:':'','trying to':''})}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

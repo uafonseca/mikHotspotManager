@@ -22,6 +22,8 @@ Encore
      */
     .addEntry('app', './assets/app.js')
 
+    
+
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 
@@ -44,7 +46,12 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
-
+    .autoProvideVariables({
+        $: "jquery",
+        jQuery: "jquery",
+        "window.jQuery": "jquery",
+        toastr: 'toastr',
+    })
     .configureBabel((config) => {
         config.plugins.push('@babel/plugin-proposal-class-properties');
     })

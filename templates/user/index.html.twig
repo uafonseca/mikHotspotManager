@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block page_content_before %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <a href="{{ path('user_new') }}" data-tippy-content="Nuevo usuario" class="btn btn-primary"><i class="fa fa-user-plus"></i></a>
+        </div>
+        <div class="card-body">
+
+            <table id="table" class="table table-hover table-responsive table-sm">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Perfil</th>
+                        <th>Tiempo conectado</th>
+                        <th>Bytes descargados</th>
+                        <th>Bytes cargados</th>
+                        <th>Comentario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user['name'] }}</td>
+                        <td>{{ user['password'] is defined ? user['password']: ''}}</td>
+                        <td>{{ user['profile'] is defined ? user['profile']: '' }}</td>
+                        <td>{{ formatDTM(user['uptime']) }}</td>
+                        <td>{{ formatBites(user['bytes-in'],2) }}</td>
+                        <td>{{ formatBites(user['bytes-out'],2) }}</td>
+                        <td>{{ user['comment'] is defined ? user['comment'] : '' }}</td>
+                        <td style="white-space: nowrap">
+                            <a href="#" data-tippy-content="Acreditar usuario <strong>{{ user['name'] }}</strong>" class="add-time text-success" data-user-id="{{user['localId'] is defined ? user['localId'] : '' }}"><i class="fa fa-clock"></i></a>
+                            {% if user['localId'] is defined %}
+                                <a data-tippy-content="Editar usuario <strong>{{ user['name'] }}</strong>" href="{{path('user_edit',{ id:user['localId'] })}}" class="text-info"><i class="fa fa-edit"></i></a>
+                            {% endif %}
+                            <form style="float:right" method="post" action="{{ path('user_delete', {'id': user['localId']}) }}" onsubmit="return confirm('Realmente desea eliminar el usuario {{ user["name"] }}');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user['localId']) }}">
+                                <button style="border: transparent; background-color: transparent;" class="text-danger" data-tippy-content="Eliminar usuario <strong>{{ user['name'] }}</strong>"><i class="fa fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready( function () {
+            var table = $('#table').DataTable();
+            $('#table').on('click','.add-time', function(event){
+                event.preventDefault();
+                const scope = $(this)
+                app.dialogs.create({
+                    url: Routing.generate('routerOs-add-time',{id:scope.data('user-id')}),
+                    columnClass:'col-md-4'
+                })
+            })
+        } );
+</script>
+{% endblock %}

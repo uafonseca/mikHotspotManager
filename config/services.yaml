@@ -27,3 +27,10 @@ services:
         class: App\EventListener\KnpMenuBuilderListener
         tags:
             - { name: kernel.event_listener, event: theme.sidebar_setup_knp_menu, method: onSetupMenu }
+
+
+    Gedmo\Blameable\BlameableListener:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]

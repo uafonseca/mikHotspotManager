@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% form_theme form '@AdminLTE/layout/form-theme.html.twig' %}
+{% block title %}New User{% endblock %}
+
+{% block page_content_before %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-text"><i class="fa fa-user-plus"></i> Adicionar usuario</p>
+                </div>
+                <div class="card-body">
+                    {{ include('user/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% form_theme form '@AdminLTE/layout/form-theme.html.twig' %}
+{% block title %}Edit UserProfile{% endblock %}
+
+{% block page_content_before %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6">
+                    <p> <i class="fa fa-pencil-alt"></i> Editar perfil</p>
+                </div>
+                <div class="col-md-6 text-right">
+                    {{ include('user_profile/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {{ include('user_profile/_form.html.twig', {'button_label': 'Update'}) }}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
