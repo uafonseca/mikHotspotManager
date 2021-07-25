@@ -28,6 +28,7 @@ import 'datatables.net'
 import 'datatables.net-dt'
 import 'datatables.net-buttons-bs4'
 import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css'
+import 'datatables.net-responsive-bs'
 
 import './plugins/jquery-confirm-v3.3.4/dist/jquery-confirm.min'
 import './plugins/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css'
@@ -37,6 +38,7 @@ import './tippy'
 import ('toastr');
 import('toastr/build/toastr.css');
 window.toastr = toastr;
+import './forms'
 
 /* Configurando el idioma español para todas las tablas */
 $.extend(true, $.fn.dataTable.defaults, {

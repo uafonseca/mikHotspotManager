@@ -48,6 +48,7 @@ class UserProfileController extends AbstractController
     public function new(Request $request): Response
     {
         $userProfile = new UserProfile();
+        $userProfile->setRateLimit('1m/768k');
         $form = $this->createForm(UserProfileType::class, $userProfile);
         $form->handleRequest($request);
 
@@ -58,7 +59,6 @@ class UserProfileController extends AbstractController
                     "address-pool" => $userProfile->getAddresPool(),
                     "rate-limit" => $userProfile->getRateLimit(),
                 ]);
-
                 $userProfile->setMikId($id);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($userProfile);

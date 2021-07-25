@@ -7,11 +7,16 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="" id="time-form" class="" method="post">
+                    <label for="deuda">
+                        <input id="deuda" type="checkbox">
+                        Deuda
+                        <input id="debit-price" type="hidden" disabled style="width: 90px!important">
+                    </label>
                     <div class="input-group mb-3">
                         <input id="time" style="font-size: 18px;" type="number" class="form-control" placeholder="Ej: 20"
                             aria-label="Ej: 20" aria-describedby="basic-addon2">
-
                             <input type="hidden" id="user" value="{{user.id}}">
+
                         <div class="input-group-append">
                             <button id="save" style="font-size: 18px;" class="btn btn-primary form-control" type="button"><i class="fa fa-plus-circle"></i></button>
                         </div>
@@ -26,31 +31,74 @@
 </div>
 <script>
     $(document).ready(function(){
+        $('#time').on('keyup', function(){
+            $('#debit-price').val($(this).val())
+        })
+        $('#deuda').on('change', function(){
+            if($(this).is(':checked'))
+                {
+                $('#debit-price').removeAttr('disabled')
+                $('#debit-price').attr('type','text')
+                }
+            else
+                {
+                    $('#debit-price').attr('disabled', true)
+                    $('#debit-price').attr('type','hidden')
+                }
+        })
         $('#save').on('click', function(e){
             e.preventDefault();
             let time = $('#time').val();
             if(time && parseInt(time) >= parseInt('{{minPrice}}') && parseInt(time) <= parseInt('{{minPrice}}') * 24) {
-                $('#time-form').addClass('disabled');
-                $.ajax({
-                    url: Routing.generate('routerOs-save-time'),
-                    data:{
-                        id: $('#user').val(),
-                        time:time
-                    },
-                    type:'GET',
-                    success: (response) => {
-                        if(response.type === 'success'){
-                            toastr.success(response.message)
-                            if( typeof finance() != 'function') finance();
-                            app.dialogs.close($(this));
-                        }else{
-                            toastr.error(response.message)
+                let errors = false;
+                
+                if($('#deuda').is(':checked')){
+                    if(parseInt($('#debit-price').val()) > parseInt(time))
+                        {
+                            errors = true;
+                            toastr.error('No puede acreditar una deuda mayor al monto')
                         }
+                        if(!errors){
+                            app.dialogs.confirm({
+                                onAccept: function(){
+                                    submit()
+                                }
+                            });
+                        }
+                }else{
+                    if(!errors){
+                        submit();
                     }
-                })
+                }
+
             } else {
                 toastr.error('El monto debe estar comprendido entre {{minPrice}} y '+parseInt('{{minPrice}}') * 24)
             }
         })
     })
+    function submit(){
+        let time = $('#time').val();
+        $('#time-form').addClass('disabled');
+        $.ajax({
+            url: Routing.generate('routerOs-save-time'),
+            data:{
+                id: $('#user').val(),
+                time: time,
+                deuda: $('#deuda').is(':checked'),
+                deudaPrice: $('#debit-price').val()
+            },
+            type:'GET',
+            success: (response) => {
+                if(response.type === 'success'){
+                    toastr.success(response.message)
+                    try {
+                        finance()
+                      } catch (error) {}
+                    app.dialogs.close($('#save'));
+                }else{
+                    toastr.error(response.message)
+                }
+            }
+        })
+    }
 </script>

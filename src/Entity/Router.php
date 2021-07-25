@@ -37,6 +37,11 @@ class Router
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Interface;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Router
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getInterface(): ?string
+    {
+        return $this->Interface;
+    }
+
+    public function setInterface(string $Interface): self
+    {
+        $this->Interface = $Interface;
 
         return $this;
     }

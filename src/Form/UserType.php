@@ -4,14 +4,23 @@ namespace App\Form;
 
 use App\Entity\User;
 use App\Entity\UserProfile;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class UserType extends AbstractType
 {
+
+    private Security $security;
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -20,7 +29,8 @@ class UserType extends AbstractType
             ])
         
             ->add('plainPassword',null, [
-                'label' => 'Contraseña'
+                'label' => 'Contraseña',
+                'required' => true
             ])
 
             ->add('isLocal', CheckboxType::class,[
@@ -28,9 +38,9 @@ class UserType extends AbstractType
                 'required' => false
             ])
 
-            ->add('time',null,[
+            ->add('time', NumberType::class,[
                 'mapped' => false,
-                'label' => 'Límite de tiempo',
+                'label' => 'Crédito inicial',
             ])
 
             ->add('comment',null,[
@@ -44,9 +54,15 @@ class UserType extends AbstractType
             ->add('profile',EntityType::class,[
                 'label' => 'Perfil',
                 'class' => UserProfile::class,
-                'attr' => [
-                    // 'class' => 'hidden'
-                ]
+                'query_builder' => function(EntityRepository $e){
+                    if($this->security->isGranted('ROLE_SUPER_ADMIN'))
+                        return $e->createQuerybuilder('p');
+                    return $e->createQuerybuilder('p')
+                        ->where('p.roles LIKE :r')
+                        ->setParameter('r','%ROLE_USER%')
+                        
+                    ;
+                }
             ])
             
         ;

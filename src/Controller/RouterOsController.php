@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Investmenst;
 use App\Entity\Package;
 use App\Entity\Router;
 use App\Entity\User;
@@ -66,8 +67,9 @@ class RouterOsController extends AbstractController
     public function trafic(Request $request):Response
     {
         if ($this->api->connect()) {
+            $interface = $this->api->getRouter()->getInterface();
             $getinterfacetraffic = $this->api->comm("/interface/monitor-traffic", array(
-                "interface" => "Portal1",
+                "interface" => $interface ,
                 "once" => "",
                 ));
             $rows = array();
@@ -85,8 +87,14 @@ class RouterOsController extends AbstractController
 
             array_push($result, $rows);
             array_push($result, $rows2);
+            $ctive = $this->api->comm("/ip/hotspot/active/print",[
+                'count-only'=>""
+            ]);
 
-            return new JsonResponse($result);
+            return new JsonResponse([
+                'result' => $result,
+                'actives' => $ctive
+            ]);
         }
         return new Response(500);
     }
@@ -113,6 +121,7 @@ class RouterOsController extends AbstractController
                 $id = '';
                 if($user)
                     $id= $user->getId();
+                $action1 = '<a href="#" class="add-time" data-user-id="'.$id.'" data-tippy-content="Acreditar"><i class="fa fa-clock"></a>';
                 $output[] = [
                     $item['user'],
                     $item['address'],
@@ -122,8 +131,7 @@ class RouterOsController extends AbstractController
                     $this->api->formatBytes($item['bytes-out'], 2),
                     isset($item['session-time-left']) ? $this->api->formatDTM($item['session-time-left']) : '',
                     $item['login-by'],
-                    '<a href="#" class="add-time" data-user-id="'.$id.'" data-tippy-content="Acreditar"><i class="fa fa-clock"></a>
-                    <a href="#" class="disconect" data-user-id="'.$id.'" data-tippy-content="Desconectar"><i class="fa fa-minus"></a>'
+                    $action1
                 ];
             }
             
@@ -225,6 +233,9 @@ class RouterOsController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $id = $request->query->get('id');
+        $deuda = $request->query->get('deuda');
+        $deudaPrice = $request->query->get('deudaPrice');
+        
         /** @var User $user */
         $user = $em->getRepository(User::class)->find($id);
         $time = $this->api->calculateTimeFronMoney($request->query->get('time'),$user->getProfile()->getPrice());
@@ -260,7 +271,10 @@ class RouterOsController extends AbstractController
             $pack =  new Package();
             $pack
                 ->setUser($user)
+                ->setDebt($deuda)
                 ->setPrice($request->query->get('time'));
+            if($deuda)
+                $pack->setPriceDebt($deudaPrice);
             $em->persist($pack);
             $user->addPack($pack);
             $em->flush();
@@ -324,9 +338,76 @@ class RouterOsController extends AbstractController
 
         $today = $em->getRepository(Package::class)->createdToday($user);
         $thisMonth = $em->getRepository(Package::class)->createdThisMonth($user);
+
+        $todayAll = $em->getRepository(Package::class)->createdToday($user, false);
+        $thisMonthAll = $em->getRepository(Package::class)->createdThisMonth($user, false);
+
+
+
+        $investmenst = $em->getRepository(Investmenst::class)->investmentThisMonth($user);
+
+        
+
         return new JsonResponse([
-            'today' => isset($today[0]) ? $today [0] : 0,
-            'thisMonth' => isset($thisMonth[0]) ? $thisMonth [0] : 0,
+            'today' => isset($today[0]) && $today[0][1] != null ? $today [0][1] : 0,
+            'thisMonth' => isset($thisMonth[0]) && $thisMonth[0][1] != null  ? $thisMonth [0][1] : 0,
+
+            'todayAll' => isset($todayAll[0]) && $todayAll[0][1] != null ? $todayAll [0][1] : 0,
+            'thisMonthAll' => isset($thisMonthAll[0]) && $thisMonthAll[0][1] != null  ? $thisMonthAll [0][1] : 0,
+
+            'investmenst'  => isset($investmenst[0]) && $investmenst[0][1] != null  ? $investmenst [0][1] : 0,
+
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param User $user
+     * @return void
+     * 
+     * @Route("/disconect/{id}", name="routerOs-disconect-user", methods={"POST","GET"}, options={"expose" = true})
+     */
+    public function disconect(User $user){
+        try{
+            $this->api->comm('/ip/hotspot/active/remove',[
+                '.id'=> $user->getMikId()
+            ]);
+            return new JsonResponse([
+                'message' => 'Usuario desconectado'
+            ]);
+        }catch(Exception $e){
+            return new JsonResponse([
+                'message' => $e->getMessage()
+            ]);
+        }
+
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     * @Route("/hosts", name="routerOs-hosts")
+     */
+    public function host(){
+        $hosts = $this->api->comm('/ip/hotspot/host/print',[]);
+        return $this->render('pages/hosts.html.twig',[
+            'hosts' => $hosts
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     * 
+     * @Route("/dhcp", name="routerOs-dhcp")
+     */
+    public function dhcpLeases(){
+        $hosts = $this->api->comm('/ip/dhcp-server/lease/print',[]);
+        return $this->render('pages/dhcp.html.twig',[
+            'hosts' => $hosts
         ]);
     }
 }

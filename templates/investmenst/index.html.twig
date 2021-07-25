@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header">
+        <h4>Inversiones</h4>
+    </div>
+
+    <div class="card-body">
+        <table id="inversiones" class="table table-hover table-responsive table-sm">
+            <thead>
+                <tr>
+                    <th>Monto</th>
+                    <th>Comentario</th>
+                    <th>Creado por</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for investmenst in investmensts %}
+                <tr>
+                    <td>${{ investmenst.mount }}</td>
+                    <td>{{ investmenst.comment }}</td>
+                    <td>{{ investmenst.createdBy.username }}</td>
+                    <td>{{ investmenst.createdAt ? investmenst.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        {# var table = $('#inversiones').DataTable({
+
+        }); #}
+        }
+    })
+</script>

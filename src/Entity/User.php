@@ -53,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=UserProfile::class, inversedBy="users")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $profile;
 
@@ -116,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function addRole(string $role){
         if(!in_array($role, $this->roles)){
-            $roles = $role;
+            $this->roles[] = $role;
         }
     }
 

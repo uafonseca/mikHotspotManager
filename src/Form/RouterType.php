@@ -3,12 +3,20 @@
 namespace App\Form;
 
 use App\Entity\Router;
+use App\Services\RouterosService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RouterType extends AbstractType
 {
+    private RouterosService $api;
+    
+    public function __construct(RouterosService $api)
+    {
+        $this->api = $api;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -16,7 +24,23 @@ class RouterType extends AbstractType
             ->add('ip', null, ['label' => 'IP'])
             ->add('username', null, ['label' => 'Usuario'])
             ->add('password', null, ['label' => 'Contraseña'])
+            ->add('interface', ChoiceType::class, [
+                'label' => 'Interfáz a monitorear',
+                'choices' => $this->getInterfaces()
+                ])
         ;
+    }
+
+    public function getInterfaces()
+    {
+        $interfaces = $this->api->comm("/interface/print");
+        $interfacess = [];
+        foreach ($interfaces as $interface) {
+            if ($interface['name'] != '') {
+                $interfacess[$interface['name']] =$interface['name'];
+            }
+        }
+        return $interfacess;
     }
 
     public function configureOptions(OptionsResolver $resolver)

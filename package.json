@@ -3,6 +3,7 @@
         "@symfony/stimulus-bridge": "^2.0.0",
         "@symfony/webpack-encore": "^1.0.0",
         "core-js": "^3.0.0",
+        "file-loader": "^6.0.0",
         "regenerator-runtime": "^0.13.2",
         "stimulus": "^2.0.0",
         "webpack-notifier": "^1.6.0"
@@ -20,6 +21,8 @@
         "datatables.net": "^1.10.25",
         "datatables.net-buttons-bs4": "^1.7.1",
         "datatables.net-dt": "^1.1.0",
+        "datatables.net-responsive": "^2.2.9",
+        "datatables.net-responsive-bs": "^2.2.9",
         "jquery": "^3.6.0",
         "jquery-confirm": "^3.3.4",
         "tippy.js": "^6.3.1",

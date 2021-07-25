@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header">
+        <h3>DHCP Leases</h3>
+    </div>
+    <div class="card-body">
+        <table id="table" class="display nowrap table-striped table-bordered table-hover" cellspacing="0"  style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-primary"><i class="fa fa-address-card"></i> IP</th>
+                    <th class="text-primary"><i class="fa fa-address-card"></i> MAC</th>
+                    <th class="text-primary"><i class="fa fa-server"></i> Servidor</th>
+                    <th class="text-primary"><i class="fa fa-address-card"></i> IP Activo</th>
+                    <th class="text-primary"><i class="fa fa-address-card"></i> MAC Activa</th>
+                    <th class="text-primary"><i class="fa fa-mobile-alt"></i> Nombre del Host</th>
+                    <th class="text-primary"><i class="fa fa-ban"></i> Estado</th>
+            </thead>
+            <tbody>
+                {% for host in hosts %}
+                <tr>
+                    <td style='text-align:center;'>
+                        {% if host['dynamic'] == "true" %}
+                            <b class="text-blod" data-tippy-content='D - dynamic'>D</b>
+                        {% else %}
+                            <b class="text-blod" data-tippy-content='S - static'>S</b>
+                        {% endif %}
+                    </td>
+                    <td>{{host['address']}}</td>
+                    <td>{{host['mac-address']}}</td>
+                    <td>{{host['server']}}</td>
+                    <td>{{host['active-address'] is defined ? host['active-mac-address'] : ''}}</td>
+                    <td>{{host['active-mac-address'] is defined ? host['active-mac-address'] : '' }}</td>
+                    <td>{{host['host-name'] is defined ? host['host-name'] : ''}}</td>
+                    <td class="text-bold {{host['status'] == 'bound' ? 'text-success' : 'text-info'}}">{{host['status']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+{{parent()}}
+<script>
+    $(document).ready(function () {
+        {# var table = $('#table').DataTable({
+            responsive: true,
+        }); #}
+    });
+</script>
+{% endblock %}

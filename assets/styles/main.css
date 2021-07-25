@@ -46,3 +46,10 @@ th.dt-center, td.dt-center { text-align: center; }
     opacity: 0.5;
     background: #CCC;
   }
+  .main-header .sidebar-toggle{
+      padding: 0!important;
+  }
+  .sidebar-toggle{
+      position: absolute;
+      margin-left: 10px;
+  }

@@ -2,6 +2,10 @@
 
 {% block title %}Log in!{% endblock %}
 
+{% block logo_login %}
+    <img src="{{asset('build/assets/images/hotspot.png')}}" width="150" alt="">
+{% endblock logo_login %}
+
 {% block login_form %}
     <form method="post" class="form-signin">
         {% if error %}

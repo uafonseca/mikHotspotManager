@@ -1937,6 +1937,14 @@ datatables.net-bs4@^1.10.15:
     datatables.net "1.10.25"
     jquery ">=1.7"
 
+datatables.net-bs@^1.10.15:
+  version "1.10.25"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.25.tgz#649f6d77088584f973ba17629b89874a52e9474a"
+  integrity sha512-05TPFg9+l8bhLDA1cezCq0pIGFaglD7uTkTuS0sN6DTArKQbT8bXkEvMcegFNWh7UMISQsTrGE/Vw3aWr1vgkg==
+  dependencies:
+    datatables.net "1.10.25"
+    jquery ">=1.7"
+
 datatables.net-buttons-bs4@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/datatables.net-buttons-bs4/-/datatables.net-buttons-bs4-1.7.1.tgz#d2fdef1f1b4073129d42806d24b8f037e9bd473b"
@@ -1960,6 +1968,23 @@ datatables.net-dt@^1.1.0:
   integrity sha512-5V/jQaO6H++CmVfnKEG5lMZVnuCSBkhRpUS5bCl4jRdvVtr+woMbI0CZ9O1Ly32Yj5wmMHlhkxcz6j+hBhVqMw==
   dependencies:
     datatables.net ">=1.10.25"
+    jquery ">=1.7"
+
+datatables.net-responsive-bs@^2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs/-/datatables.net-responsive-bs-2.2.9.tgz#8772813fbee32e2ea023f4ea85b6d37ccb5f725d"
+  integrity sha512-Rwpy94e2G4G8OC1X8WXwtyRTPlWTGNzJqOeQOHg2JVuGQwqy2QAPYVE3f2fonHyQSsAucoNf/18cBYCnY4xPPQ==
+  dependencies:
+    datatables.net-bs "^1.10.15"
+    datatables.net-responsive "2.2.9"
+    jquery ">=1.7"
+
+datatables.net-responsive@2.2.9, datatables.net-responsive@^2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive/-/datatables.net-responsive-2.2.9.tgz#846d4436691b13261e8e436dc988affe4d262f36"
+  integrity sha512-C+mOY/mG17zzaYPtgqAOsC4JlGddGkKmO/ADNEtNZ41bcPV1/3jJzkOWT3DCZ400NmkXLDz4WObWlPT8WCgfzg==
+  dependencies:
+    datatables.net "^1.10.15"
     jquery ">=1.7"
 
 datatables.net@1.10.25, datatables.net@>=1.10.25, datatables.net@^1.10.15, datatables.net@^1.10.25:
@@ -2384,6 +2409,14 @@ faye-websocket@^0.11.3:
   integrity sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==
   dependencies:
     websocket-driver ">=0.5.1"
+
+file-loader@^6.0.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-6.2.0.tgz#baef7cf8e1840df325e4390b4484879480eebe4d"
+  integrity sha512-qo3glqyTa61Ytg4u73GultjHGjdRyig3tG6lPtyX/jOEJvHif9uB0/OCI2Kif6ctF3caQTW2G5gym21oAsI4pw==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
 
 fill-range@^7.0.1:
   version "7.0.1"

@@ -50,6 +50,7 @@ class UserProfile
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profile")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $users;
 
@@ -57,6 +58,11 @@ class UserProfile
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mikId;
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -161,5 +167,17 @@ class UserProfile
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getRoles(): ?array
+    {
+        return is_array($this->roles) ? $this->roles : [];
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 }

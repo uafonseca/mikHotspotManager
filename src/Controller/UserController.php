@@ -71,14 +71,25 @@ class UserController extends AbstractController
             }else{
                 $user->setPassword($user->getPlainPassword());
             }
+            $time = $this->api->calculateTimeFronMoney($form->get("time")->getData(), $user->getProfile()->getPrice());
             try{
-                $this->api->comm("/ip/hotspot/user/add", [
+                $id = $this->api->comm("/ip/hotspot/user/add", [
                     "name" => $user->getUsername(),
                     "password" => $user->getPlainPassword(),
                     "profile" => $user->getProfile()->getName(),
-                    "limit-uptime" => $form->get("time")->getData() == "" ? 0 : $form->get("time")->getData()
+                    "limit-uptime" => $time
                 ]);
+                $user->setMikId($id);
 
+                if($time != ""){
+                    $pack =  new Package();
+                    $pack
+                        ->setUser($user)
+                        ->setDebt(false)
+                        ->setPrice($form->get("time")->getData());
+                    $entityManager->persist($pack);
+                    $user->addPack($pack);
+                }
                 
                 $entityManager->flush();
 

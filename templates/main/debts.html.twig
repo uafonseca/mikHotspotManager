@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Deudas</div>
+                <div class="card-body">
+                    <table id="table" class="display nowrap table-striped table-bordered table-hover" cellspacing="0"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th><i class="fa fa-user text-primary"></i> Usuario</th>
+                                <th><i class="fa fa-clock text-primary"></i> Fecha</th>
+                                <th><i class="fa fa-money-bill text-primary"></i> Deuda</th>
+                                <th><i class="fa fa-list text-primary"></i> Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in debts %}
+                            <tr>
+                                <td>{{row.user.username}}</td>
+                                <td>{{row.createdAt|date("m/d/Y")}}</td>
+                                <td>${{row.priceDebt}}</td>
+                                <td>
+                                    <form action="" method="get">
+                                        <input type="hidden" name="pay" value="{{row.id}}">
+                                        <button type="submit" class="text-info" data-tippy-content="Pagar deuda"
+                                            style="border: transparent;"><i class="fa fa-check-double"></i> </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+
+{% block javascripts %}
+{{parent()}}
+<script>
+    $("form").submit(function (event) {
+        const form = $(this)
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        $.confirm({
+            title: 'Aviso',
+            content: "Debe confirmar la acción antes de continuar",
+            buttons: {
+                confirm: {
+                    text: 'Confirmar',
+                    btnClass: 'btn-primary',
+                    action: function () {
+                        form.submit();
+                    }
+                },
+                cancel: {
+                    text: 'Cancelar',
+                    btnClass: 'btn-default',
+                    action: function () {
+                        event.preventDefault();
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

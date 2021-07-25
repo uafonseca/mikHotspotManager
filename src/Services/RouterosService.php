@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Entity\Package;
 use App\Entity\Router;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class RouterosService
 {
@@ -12,16 +14,20 @@ class RouterosService
 
     private EntityManagerInterface $em;
 
-    /**
-     * Undocumented function
-     *
-     * @param RouterosAPI $api
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(RouterosAPI $api, EntityManagerInterface $em)
+    private Security $securiry;
+
+  /**
+   * Undocumented function
+   *
+   * @param RouterosAPI $api
+   * @param EntityManagerInterface $em
+   * @param Security $securiry
+   */
+    public function __construct(RouterosAPI $api, EntityManagerInterface $em, Security $securiry)
     {
         $this->em = $em;
         $this->api = $api;
+        $this->securiry = $securiry;
     }
 
 
@@ -42,7 +48,7 @@ class RouterosService
     /**
      * Undocumented function
      *
-     * @return void
+     * @return Router
      */
     public function getRouter()
     {
@@ -108,5 +114,16 @@ class RouterosService
         /** suponiendo que 15 es el precio x hora */
         $d = date_create('00:00:00');
         return $d->add(new DateInterval('PT' . intval((($money / ($price / 60)) / 60) * 60) . 'M'))->format('h:i');
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return integer
+     */
+    public function countDebs():int{
+        $user = $this->securiry->getUser();
+        $debts = $this->em->getRepository(Package::class)->myDebts($user);
+        return count($debts);
     }
 }

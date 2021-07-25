@@ -1,0 +1,64 @@
+{% extends "base.html.twig" %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header">
+        <h3>Hotspot Hosts</h3>
+    </div>
+    <div class="card-body">
+        <table id="table" class="display nowrap table-striped table-bordered table-hover" cellspacing="0"  style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> MAC Address</th>
+                    <th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> Address</th>
+                    <th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> To Address</th>
+                    <th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> Server</th>
+                    <th class="pointer" title="Click to sort"><i class="fa fa-sort"></i>
+                        Comentario
+                    </th>
+            </thead>
+            <tbody>
+                {% for host in hosts %}
+                <tr>
+                    <td style='text-align:center;'>
+                        {% if host['authorized'] == "true" and host['DHCP'] is defined and host['DHCP'] == "true" %}
+                            <b class='text-success' data-tippy-content='A - authorized, H - DHCP'>A H</b>
+                        {% elseif host['authorized'] == "true" and host['dynamic'] is defined and host['dynamic'] ==
+                        "true" %}
+                            <b class='text-success' data-tippy-content='A - Authorized, D - dynamic'>A D</b>
+                        {% elseif host['authorized'] == "true" %}
+                            <b class='text-success' data-tippy-content='A - authorized'>A</b>
+                        {% elseif host['DHCP'] is defined and host['DHCP'] == "true" %}
+                            <b class='text-success' data-tippy-content='H - DHCP'>H</b>
+                        {% elseif host['dynamic'] is defined and host['dynamic'] == "true" %}
+                            <b class='text-success' data-tippy-content='D - dynamic'>D</b>
+                        {% elseif host['bypassed'] == "true" %}
+                            <b class='text-primary' data-tippy-content='P - Bypassed'>P</b>
+                        {% else %}
+                        {% endif %}
+                    </td>
+                    <td>{{host['mac-address']}}</td>
+                    <td>{{host['address']}}</td>
+                    <td>{{host['to-address']}}</td>
+                    <td>{{host['server']}} </td>
+                    <td>{{host['comment'] is defined ? host['comment'] : ''}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+{{parent()}}
+<script>
+    $(document).ready(function () {
+        var table = $('#table').DataTable({
+            responsive: true,
+        });
+    });
+</script>
+{% endblock %}

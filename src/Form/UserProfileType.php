@@ -28,7 +28,7 @@ class UserProfileType extends AbstractType
             ->add('addresPool', ChoiceType::class, [
                 'label' => 'Address poll',
                 'choices' => $this->getAddressPolls(),
-                'required' => false
+                'required' => true
             ])
             ->add('rateLimit', null, [
                 'label' => 'límite de datos',
@@ -36,22 +36,28 @@ class UserProfileType extends AbstractType
             ])
             ->add('price', NumberType::class, [
                 'label' => 'Precio',
-                'required' => false
+                'required' => true
+            ])
+            ->add('roles',ChoiceType::class,[
+                'label' => 'Roles',
+                'multiple' => true,
+                'choices' => [
+                    'ROLE_USER'=> 'ROLE_USER',
+                    'ROLE_SUPER_ADMIN' =>'ROLE_SUPER_ADMIN'
+                ]
             ])
         ;
     }
 
     private function getAddressPolls()
     {
-        if($this->api->connect('192.168.88.1','admin','X5452')){
-            $pools = $this->api->comm("/ip/pool/print");
+        $pools = $this->api->comm("/ip/pool/print");
             $poolss = [];
             foreach ($pools as $pool) {
-                $poolss[$pool['name']] =$pool['name'];
+                if($pool['name'] != '')
+                    $poolss[$pool['name']] =$pool['name'];
             }
             return $poolss;
-        }
-        
     }
 
     public function configureOptions(OptionsResolver $resolver)

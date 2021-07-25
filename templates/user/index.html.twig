@@ -7,11 +7,11 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <a href="{{ path('user_new') }}" data-tippy-content="Nuevo usuario" class="btn btn-primary"><i class="fa fa-user-plus"></i></a>
+            <a href="{{ path('user_new') }}" data-tippy-content="Nuevo usuario" class="btn btn-primary"><i
+                    class="fa fa-user-plus"></i></a>
         </div>
         <div class="card-body">
-
-            <table id="table" class="table table-hover table-responsive table-sm">
+            <table id="table" class="display nowrap table-striped table-bordered" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
                         <th>Usuario</th>
@@ -28,21 +28,37 @@
                     {% for user in users %}
                     <tr>
                         <td>{{ user['name'] }}</td>
-                        <td>{{ user['password'] is defined ? user['password']: ''}}</td>
+                        <td>
+                            <div class="input-group">
+                                <input id="{{user['name']}}" type="password" value="{{ user['password'] is defined ? user['password']: ''}}" readonly class="form-control" style="max-width: 100px; height: 24px;" placeholder="password" aria-label="password" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="show btn btn-info" data-target="{{user['name']}}" type="button"><i class="fa fa-eye-slash"></i></button>
+                                </div>
+                            </div>
+                        </td>
                         <td>{{ user['profile'] is defined ? user['profile']: '' }}</td>
                         <td>{{ formatDTM(user['uptime']) }}</td>
                         <td>{{ formatBites(user['bytes-in'],2) }}</td>
                         <td>{{ formatBites(user['bytes-out'],2) }}</td>
                         <td>{{ user['comment'] is defined ? user['comment'] : '' }}</td>
                         <td style="white-space: nowrap">
-                            <a href="#" data-tippy-content="Acreditar usuario <strong>{{ user['name'] }}</strong>" class="add-time text-success" data-user-id="{{user['localId'] is defined ? user['localId'] : '' }}"><i class="fa fa-clock"></i></a>
+                            <a href="#" data-tippy-content="Acreditar usuario <strong>{{ user['name'] }}</strong>"
+                                class="add-time text-success"
+                                data-user-id="{{user['localId'] is defined ? user['localId'] : '' }}"><i
+                                    class="fa fa-clock"></i></a>
                             {% if user['localId'] is defined %}
-                                <a data-tippy-content="Editar usuario <strong>{{ user['name'] }}</strong>" href="{{path('user_edit',{ id:user['localId'] })}}" class="text-info"><i class="fa fa-edit"></i></a>
-                            {% endif %}
-                            <form style="float:right" method="post" action="{{ path('user_delete', {'id': user['localId']}) }}" onsubmit="return confirm('Realmente desea eliminar el usuario {{ user["name"] }}');">
+                            <a data-tippy-content="Editar usuario <strong>{{ user['name'] }}</strong>"
+                                href="{{path('user_edit',{ id:user['localId'] })}}" class="text-info"><i
+                                    class="fa fa-edit"></i></a>
+                            <form style="float:right" method="post"
+                                action="{{ path('user_delete', {'id': user['localId']}) }}"
+                                onsubmit="return confirm('Realmente desea eliminar el usuario {{ user["name"] }}');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user['localId']) }}">
-                                <button style="border: transparent; background-color: transparent;" class="text-danger" data-tippy-content="Eliminar usuario <strong>{{ user['name'] }}</strong>"><i class="fa fa-trash"></i></button>
+                                <button style="border: transparent; background-color: transparent;" class="text-danger"
+                                    data-tippy-content="Eliminar usuario <strong>{{ user['name'] }}</strong>"><i
+                                        class="fa fa-trash"></i></button>
                             </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}
@@ -60,18 +76,32 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{parent()}}
-    <script>
-        $(document).ready( function () {
-            var table = $('#table').DataTable();
-            $('#table').on('click','.add-time', function(event){
-                event.preventDefault();
-                const scope = $(this)
-                app.dialogs.create({
-                    url: Routing.generate('routerOs-add-time',{id:scope.data('user-id')}),
-                    columnClass:'col-md-4'
-                })
+{{parent()}}
+<script>
+    $(document).ready(function () {
+        var table = $('#table').DataTable({
+            responsive: true,
+        });
+        $('#table').on('click', '.add-time', function (event) {
+            event.preventDefault();
+            const scope = $(this)
+            app.dialogs.create({
+                url: Routing.generate('routerOs-add-time', { id: scope.data('user-id') }),
+                columnClass: 'col-md-4'
             })
-        } );
+        })
+        $('#table').on('click', '.show', function (event) {
+            event.preventDefault();
+            const scope = $(this)
+            let input = $('#'+scope.data('target'));
+            if (input.attr('type') === "password") {
+                input.attr('type','text');
+                scope.html('<i class="fa fa-eye"></i>')
+            } else {
+                input.attr('type','password');
+                scope.html('<i class="fa fa-eye-slash"></i>')
+            }
+        })
+    });
 </script>
 {% endblock %}

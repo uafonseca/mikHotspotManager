@@ -35,9 +35,19 @@ class Package
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $debt;
+
+        /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $priceDebt;
+
     public function __construct()
     {
-        $this->user = new ArrayCollection();
+       
     }
 
     public function getId(): ?int
@@ -58,9 +68,9 @@ class Package
     }
 
     /**
-     * @return Collection|User[]
+     * @return User[]
      */
-    public function getUser(): Collection
+    public function getUser()
     {
         return $this->user;
     }
@@ -72,5 +82,37 @@ class Package
         return $this;
     }
 
+    public function getDebt(): ?bool
+    {
+        return $this->debt;
+    }
+
+    public function setDebt(bool $debt): self
+    {
+        $this->debt = $debt;
+
+        return $this;
+    }
+
    
+
+    /**
+     * Get the value of priceDebt
+     */ 
+    public function getPriceDebt()
+    {
+        return $this->priceDebt;
+    }
+
+    /**
+     * Set the value of priceDebt
+     *
+     * @return  self
+     */ 
+    public function setPriceDebt($priceDebt)
+    {
+        $this->priceDebt = $priceDebt;
+
+        return $this;
+    }
 }

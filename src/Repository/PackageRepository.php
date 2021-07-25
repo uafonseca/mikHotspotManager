@@ -20,41 +20,73 @@ class PackageRepository extends ServiceEntityRepository
         parent::__construct($registry, Package::class);
     }
 
-    /**
-     * @return Package[] Returns an array of Package objects
-     */
 
-    public function createdToday(User $user)
+   /**
+    * Undocumented function
+    *
+    * @param User $user
+    * @param boolean $check
+    * @return void
+    */
+    public function createdToday(User $user, bool $check = true)
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->select('sum(p.price)')
-            ->andWhere('p.createdBy = :user')
             ->andWhere('MONTH(p.createdAt) = :m')
-            ->andWhere('YEAR(p.createdAt) = :y')
-            ->andWhere('DAY(p.createdAt) = :d')
-            ->setParameter('user', $user)
+            ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
             ->setParameter('m', date('m'))
+            ->setParameter('y', date('Y'))
             ->setParameter('d', date('d'))
-            ->setParameter('y', date('Y'))
-            ->getQuery()
-            ->getResult()
         ;
+        if($check){
+            $qb ->andWhere('p.createdBy = :user')
+            ->setParameter('user', $user);
+        }else{
+            $qb ->andWhere('p.createdBy <> :user')
+            ->setParameter('user', $user);
+        }
+        return $qb->getQuery()
+                ->getResult();
     }
 
-    public function createdThisMonth(User $user)
+ /**
+  * Undocumented function
+  *
+  * @param User $user
+  * @param boolean $check
+  * @return void
+  */
+    public function createdThisMonth(User $user, bool $check = true)
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->select('sum(p.price)')
-            ->andWhere('p.createdBy = :user')
             ->andWhere('MONTH(p.createdAt) = :m')
             ->andWhere('YEAR(p.createdAt) = :y')
-            ->setParameter('user', $user)
             ->setParameter('m', date('m'))
             ->setParameter('y', date('Y'))
-            ->getQuery()
-            ->getResult()
         ;
+        if($check){
+            $qb ->andWhere('p.createdBy = :user')
+            ->setParameter('user', $user);
+        }else{
+            $qb ->andWhere('p.createdBy <> :user')
+            ->setParameter('user', $user);
+        }
+        return $qb->getQuery()
+                ->getResult();
     }
+
+    public function myDebts(User $user){
+        return $this->createQueryBuilder('p')
+            ->where('p.debt =:t')
+            ->setParameter('t', true)
+            ->andWhere('p.createdBy = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    
     
 
     /*

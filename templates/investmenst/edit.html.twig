@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Investmenst{% endblock %}
+
+{% block body %}
+    <h1>Edit Investmenst</h1>
+
+    {{ include('investmenst/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('investmenst_index') }}">back to list</a>
+
+    {{ include('investmenst/_delete_form.html.twig') }}
+{% endblock %}

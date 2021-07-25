@@ -3,52 +3,132 @@
 {% block title %}Dashboard
 {% endblock %}
 
-{% block page_content_before %}
-<div class="container">
+{% block page_title %}
+<strong style="margin-left: 10px;"> HOTSPOT-MANAGER</strong>
+{% endblock %}
+{% block page_subtitle %}
+V.1.0
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-3 col-6">
+        <div class="col-md-3">
+            <div class="card">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class=""><i class="fa fa-door-open text-primary"></i> {{interface}}</td>
+                            <td class=""><i class="fa fa-arrow-circle-down text-danger"></i> <span id="trafic-up"><i
+                                        class="fa fa-spin fa-spinner"></i></span></td>
+                            <td class=""><i class="fa fa-arrow-circle-up text-info"></i> <span id="trafic-down"><i
+                                        class="fa fa-spin fa-spinner"></i></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card ">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class=""><i class="fa fa-network-wired text-primary"></i> Acceso a internet</td>
+                            <td id="status" class="text-warning">
+                                <i class="fa fa-check-circle"></i>
+                                <span><i class="fa fa-spin fa-spinner"></i></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="col-md-3">
+            <div class="card ">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class=""><i class="fa fa-money-bill-wave text-primary"></i> Inversión
+                                [<strong>{{'now'|date("M")}}</strong>] <strong id='investmenst'><i
+                                        class="fa fa-spin fa-spinner"></i></strong></td>
+                            <td class="text-primary"><a class="add-investmens" href="{{path('investmenst_new')}}"
+                                    data-tippy-content="Adicionar"><i class="fa fa-plus-circle"></i></a></td>
+                            <td class="text-primary"><a class="list-investmens" href="{{path('investmenst_index')}}"
+                                    data-tippy-content="Listado"><i class="fa fa-list"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card ">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class=""><i class="fa fa-star-of-david text-primary"></i> Cumplimiento <strong
+                                    id="cump"></strong></td>
+                            <td class=""><i class="fa fa-money-check text-primary"></i> Ganancia <strong
+                                    id="ganacia"></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block page_content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3 id="trafic-up">
+                    <h3 id="actives">
                         <i class="fa fa-spin fa-spinner"></i>
                     </h3>
 
-                    <p>Velocidad de bajada</p>
+                    <p>Clientes en línea</p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-arrow-circle-down"></i>
+                    <i class="fa fa-mobile-alt"></i>
                 </div>
-                <a href="#" class="small-box-footer">Portal1
+                <a href="#" class="small-box-footer">Listado
+                    <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-3 col-md-3 col-6">
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3 id="trafic-down">
-                        <i class="fa fa-spin fa-spinner"></i>
+                    <h3>
+                        {{count}}
+                        <!-- <small style="color: black;">/100</small> -->
                     </h3>
-
-                    <p>Velocidad de subida</p>
+                    <p>Clientes registrados</p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-arrow-circle-up"></i>
+                    <i class="fa fa-user-friends"></i>
                 </div>
-                <a href="#" class="small-box-footer">Portal1</a>
+                <a href="{{path('user_index')}}" class="small-box-footer">Listado
+                    <i class="fas fa-arrow-circle-right"></i>
+                </a>
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-3 col-md-3 col-6">
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3 id="today">
                         <i class="fa fa-spin fa-spinner"></i>
                     </h3>
-
                     <p>Ingresos hoy</p>
                 </div>
                 <div class="icon">
@@ -60,7 +140,7 @@
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-3 col-md-3 col-6">
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -83,7 +163,7 @@
 
 
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-9 col-sm-12">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -93,25 +173,26 @@
                             </h3>
                         </div>
                         <div class="col-md-6">
-                            <a data-tippy-content="Adicionar usuario" href="{{path('user_new')}}" class="user btn btn-primary pull-right"
-                                style="margin-right: 10px;"><i class="fa fa-user-plus"></i></a>
+                            <a data-tippy-content="Adicionar usuario" href="{{path('user_new')}}"
+                                class="user btn btn-primary pull-right" style="margin-right: 10px;"><i
+                                    class="fa fa-user-plus"></i></a>
                         </div>
                     </div>
 
                 </div>
-                <div class="card-body">
-                    <table id="table" class="table table-hover table-responsive table-sm">
+                <div class="card-body table-responsive">
+                    <table id="table" class="display nowrap table-striped table-bordered" cellspacing="0"
+                        style="width:100%">
                         <thead>
                             <tr>
-                                <th> <i class="fa fa-user text-primary"></i> CLIENTE</th>
-                                <th><i class="fa fa-keyboard text-secondary"></i> IP</th>
-                                <th><i class="fa fa-address-book text-warning"></i> MAC</th>
-                                <th class="text-right"><i class="fa fa-clock text-info"></i> CONEXIÓN</th>
-                                <!-- <th class="text-right">BYTES <i class="fa fa-arrow-up text-success"></i></th> -->
-                                <th class="text-right">BYTES <i class="fa fa-arrow-down text-danger"></i> </th>
-                                <th class="text-right"><i class="fa fa-clock text-warning"></i> RESTANTE</th>
-                                <th><i class="fa fa-key text-success"></i> LOGIN</th>
-                                <th><i class="fa fa-tasks text-success"></i> ACCIONES</th>
+                                <th class="text-center"> <i class="fa fa-user text-primary"></i> CLIENTE</th>
+                                <th class="text-center"><i class="fa fa-keyboard text-secondary"></i> IP</th>
+                                <th class="text-center"><i class="fa fa-address-book text-warning"></i> MAC</th>
+                                <th class="text-center"><i class="fa fa-clock text-info"></i> CONEXIÓN</th>
+                                <th class="text-center">BYTES <i class="fa fa-arrow-down text-danger"></i> </th>
+                                <th class="text-center"><i class="fa fa-clock text-warning"></i> RESTANTE</th>
+                                <th class="text-center"><i class="fa fa-key text-success"></i> LOGIN</th>
+                                <th class="text-center"><i class="fa fa-tasks text-success"></i> ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -119,7 +200,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-12">
             <div class="card">
                 <div class="card-header">
                     <h3>
@@ -139,34 +220,80 @@
 {{parent()}}
 <script>
     jQuery(function () {
-        setInterval(getData, 3000);
-        setInterval(getlogs, 3000);
+        setInterval(getData, 10000);
+        setInterval(getlogs, 10000);
+        setInterval(ping, 10000);
         finance();
         setInterval(finance, 30000);
+
+        $('.add-investmens, .list-investmens').on('click', function (event) {
+            event.preventDefault();
+            const scope = $(this);
+            app.dialogs.create({
+                url: scope.attr('href'),
+                columnClass: 'col-md-5'
+            })
+        })
+
         var table = $('#table').DataTable({
             "ajax": Routing.generate('routerOs-active'),
+            responsive: true,
             "columnDefs": [
-                {
-                    "className": "dt-center",
-                    "targets": "_all"
-                },
+                { "className": "dt-center", "targets": "_all" }
             ],
         });
-        $('#table').on('click','.add-time', function(event){
+        function ping() {
+            $.ajax({
+                url: Routing.generate('ping'),
+                success: function (result) {
+                    if (result === true) {
+                        $('#status').removeClass('text-warning').addClass('text-success').html('<i class="fa fa-check-circle"></i> Conectado');
+                    } else {
+                        $('#status').removeClass('text-success').addClass('text-warning').html('<i class="fa fa-times"></i> Desconectado');
+                    }
+                },
+                error: function (result) {
+                    console.log('timeout/error');
+                }
+            });
+        }
+
+        $('#table').on('click', '.add-time', function (event) {
             event.preventDefault();
             const scope = $(this)
             app.dialogs.create({
-                url: Routing.generate('routerOs-add-time',{id:scope.data('user-id')}),
-                columnClass:'col-md-4'
+                url: Routing.generate('routerOs-add-time', { id: scope.data('user-id') }),
+                columnClass: 'col-md-4'
             })
         })
+        $('#table').on('click', '.disconect', function (event) {
+            event.preventDefault();
+            const scope = $(this)
+            app.dialogs.confirm({
+                message: '¿Realmende desea desconectar al usuario?',
+                onAccept: function () {
+                    $.ajax({
+                        url: Routing.generate('routerOs-disconect-user', { id: scope.data('user-id') }),
+                        success: (response) => {
+                            toastr.warning(response.message)
+                            table.ajax.reload(function () {
+                                Tippy('[data-tippy-content]', {
+                                    duration: [10, 10],
+                                })
+                            });
+                        }
+                    })
+                }
+            })
+
+        })
         setInterval(function () {
-            table.ajax.reload(function(){
+            table.ajax.reload(function () {
                 Tippy('[data-tippy-content]', {
                     duration: [10, 10],
                 })
             });
-        }, 5000);
+        }, 10000);
         $('.time').on('click', function (event) {
             event.preventDefault();
             app.dialogs.create({
@@ -175,13 +302,35 @@
             })
         })
     })
-    function finance(){
+    function finance() {
         $.ajax({
             url: Routing.generate('user_finance-today'),
             type: 'POST',
             success: (response) => {
-                $('#today').html('$'+response.today[1])
-                $('#this-month').html('$'+response.thisMonth[1])
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                $('#today').html('$' + response.today + ' <small style="color:black;">+$' + response.todayAll + '</small>')
+                $('#this-month').html('$' + response.thisMonth + ' <small style="color:black;">+$' + response.thisMonthAll + '</small>')
+                $('#investmenst').html('$' + response.investmenst)
+
+                let total = parseInt(response.thisMonth) + parseInt(response.thisMonthAll);
+
+                let percent = total * 100 / parseInt(response.investmenst);
+
+                let ganacia = total - parseInt(response.investmenst);
+
+                $('#cump').html(percent.toFixed(1) + '%')
+                if (ganacia < 0) {
+                    $('#ganacia').addClass('text-danger').html(ganacia)
+                } else {
+                    $('#ganacia').addClass('text-success').html(ganacia)
+                }
+
+                {% else %}
+                    $('#today').html('$' + response.today)
+                    $('#this-month').html('$' + response.thisMonth)
+                {% endif %}
+                
             }
         });
     }
@@ -190,10 +339,11 @@
             url: Routing.generate('routerOs-trafic'),
             type: 'POST',
             success: (response) => {
-                let bytesTx = response[0].data[0];
-                let bytesRx = response[1].data[0];
+                let bytesTx = response['result'][0].data[0];
+                let bytesRx = response['result'][1].data[0];
                 $('#trafic-up').html(bytesToSize(bytesRx))
                 $('#trafic-down').html(bytesToSize(bytesTx))
+                $('#actives').html(response['actives'])
             }
         });
     }
