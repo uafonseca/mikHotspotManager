@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserProfileController extends AbstractController
 {
-    private RouterosService $api;
+    private  $api;
 
 
     /**

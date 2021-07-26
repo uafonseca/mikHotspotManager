@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
-    private RouterosService $api;
+    private  $api;
 
     private $passwordEncoder;
 
