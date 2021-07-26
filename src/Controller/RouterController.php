@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Router;
+use App\Entity\User;
 use App\Form\RouterType;
 use App\Repository\RouterRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,19 +40,24 @@ class RouterController extends AbstractController
         }
         $form = $this->createForm(RouterType::class, $router);
         $form->handleRequest($request);
-
+        $entityManager = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            
             $entityManager->persist($router);
             $entityManager->flush();
 
             return $this->redirectToRoute('router_new', [], Response::HTTP_SEE_OTHER);
         }
 
+        $admins = $entityManager->getRepository(User::class)->findBy([
+            'isLocal' => true
+        ]);
+
         return $this->renderForm('router/new.html.twig', [
             'router' => $router,
             'form' => $form,
-            'exist' => $exist
+            'exist' => $exist,
+            'admins' => $admins
         ]);
     }
 

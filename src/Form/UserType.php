@@ -8,10 +8,13 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Range;
 
 class UserType extends AbstractType
 {
@@ -38,17 +41,11 @@ class UserType extends AbstractType
                 'required' => false
             ])
 
-            ->add('time', NumberType::class,[
-                'mapped' => false,
-                'label' => 'Crédito inicial',
-            ])
+           
 
             ->add('comment',null,[
                 'mapped' => false,
                 'label' => 'Comentario',
-                'attr' => [
-                    // 'class' => 'hidden'
-                ]
             ])
 
             ->add('profile',EntityType::class,[
@@ -63,9 +60,25 @@ class UserType extends AbstractType
                         
                     ;
                 }
-            ])
-            
+            ])   
         ;
+        if($this->security->isGranted('ROLE_SUPER_ADMIN')){
+            $builder->add('time', IntegerType::class,[
+                'mapped' => false,
+                'label' => 'Crédito inicial',
+            ]);
+        }else{
+            $builder->add('time', IntegerType::class,[
+                'mapped' => false,
+                'label' => 'Crédito inicial',
+                'constraints' => [
+                    new Range([
+                        'min' => 1,
+                        
+                    ])
+                ]
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

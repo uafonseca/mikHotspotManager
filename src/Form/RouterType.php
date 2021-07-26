@@ -26,7 +26,8 @@ class RouterType extends AbstractType
             ->add('password', null, ['label' => 'Contraseña'])
             ->add('interface', ChoiceType::class, [
                 'label' => 'Interfáz a monitorear',
-                'choices' => $this->getInterfaces()
+                'choices' => $this->getInterfaces(),
+                'required' => false
                 ])
         ;
     }

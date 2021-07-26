@@ -31,7 +31,7 @@ class PackageRepository extends ServiceEntityRepository
     public function createdToday(User $user, bool $check = true)
     {
         $qb = $this->createQueryBuilder('p')
-            ->select('sum(p.price)')
+            
             ->andWhere('MONTH(p.createdAt) = :m')
             ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
             ->setParameter('m', date('m'))
@@ -39,10 +39,15 @@ class PackageRepository extends ServiceEntityRepository
             ->setParameter('d', date('d'))
         ;
         if($check){
-            $qb ->andWhere('p.createdBy = :user')
+            $qb
+            ->select('sum(p.price)')
+            ->andWhere('p.createdBy = :user')
             ->setParameter('user', $user);
         }else{
-            $qb ->andWhere('p.createdBy <> :user')
+            $qb
+            ->select('sum(p.price)')
+            ->join('p.createdBy', 'user')
+            ->andWhere('p.createdBy <> :user')
             ->setParameter('user', $user);
         }
         return $qb->getQuery()
@@ -59,17 +64,21 @@ class PackageRepository extends ServiceEntityRepository
     public function createdThisMonth(User $user, bool $check = true)
     {
         $qb = $this->createQueryBuilder('p')
-            ->select('sum(p.price)')
+        
             ->andWhere('MONTH(p.createdAt) = :m')
             ->andWhere('YEAR(p.createdAt) = :y')
             ->setParameter('m', date('m'))
             ->setParameter('y', date('Y'))
         ;
         if($check){
-            $qb ->andWhere('p.createdBy = :user')
+            $qb 
+            ->select('sum(p.price)')
+            ->andWhere('p.createdBy = :user')
             ->setParameter('user', $user);
         }else{
-            $qb ->andWhere('p.createdBy <> :user')
+            $qb
+            ->select('sum(p.price)')
+            ->andWhere('p.createdBy <> :user')
             ->setParameter('user', $user);
         }
         return $qb->getQuery()

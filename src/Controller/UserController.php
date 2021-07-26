@@ -64,14 +64,16 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
-
             if($user->getIsLocal()){
                 $password = $this->passwordEncoder->encodePassword ($user, $user->getPlainPassword());
 				$user->setPassword ($password);
             }else{
                 $user->setPassword($user->getPlainPassword());
             }
-            $time = $this->api->calculateTimeFronMoney($form->get("time")->getData(), $user->getProfile()->getPrice());
+            if(intval($form->get("time")->getData()) === 0 && !$this->isGranted('ROLE_SUPER_ADMIN'))
+                $time = '0';
+            else
+                $time = $this->api->calculateTimeFronMoney($form->get("time")->getData(), $user->getProfile()->getPrice());
             try{
                 $id = $this->api->comm("/ip/hotspot/user/add", [
                     "name" => $user->getUsername(),
@@ -170,5 +172,4 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    
 }

@@ -8,7 +8,7 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="card-header">
-                    <p class="card-title"><i class="fa fa-cog"></i> Configuración del Router MIKROTICK</p>
+                    <h3 class="card-title"><i class="fa fa-cog"></i> Configuración del Router MIKROTICK</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -21,11 +21,40 @@
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
-                    <p class="card-title"><i class="fa fa-download"></i> Sincronización de datos</p>
+                    <h3 class="card-title"><i class="fa fa-download"></i> Sincronización de datos</h3>
                 </div>
                 <div class="card-body">
                     <p>Esta acción es necesaria para sincronizar los datos almacenados en el Router, en caso de que se administrara el hotspot con cualquier otra herramienta, incluido WinBox</p>
                     <a href="#" class="sync btn btn-warning"> <i class="fa fa-exclamation-triangle"></i> Sincronizar datos</a>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-money-bill-wave"></i> Comisiones</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Comisión</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in admins %}
+                                {% if 'ROLE_SUPER_ADMIN' not in row.roles %}
+                                    <tr>
+                                        <td>{{row.username}}</td>
+                                        <td>
+                                            <input id="{{row.id}}" type="number" style="width: 70px; margin-right: 5px;" value="{{row.comision}}">%
+                                        </td>
+                                        <td><a href="#" data-id="{{row.id}}" class="update btn btn-primary"><i class="fa fa-save"></i> Actualizar </a></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -38,12 +67,31 @@
 {{parent()}}
 <script>
     $(document).ready(function () {
+        $('.update').on('click', function(event){
+            event.preventDefault();
+            const scope = $(this);
+            $.ajax({
+                url: Routing.generate('update-comisions'),
+                data:{
+                user: scope.data('id'),
+                val: $('input#'+scope.data('id')).val()
+                },
+                success :(response) => {
+                    if(response.type === 'success'){
+                        toastr.success(response.message)
+                    }
+                }
+            });
+        })
         $('.sync').on('click', function (event) {
              event.preventDefault();
              $.ajax({
                  url: Routing.generate('routerOs-sync-users'),
+                 type: 'get',
                  success :(response) => {
-                     alert('OK')
+                     if(response.type === 'success'){
+                         toastr.success('Datos sincronizados')
+                     }
                  }
              });
         })

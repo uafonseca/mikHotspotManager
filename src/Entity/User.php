@@ -69,8 +69,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Package::class, mappedBy="user")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $packs;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $comision = 0;
 
     public function __construct()
     {
@@ -249,6 +255,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $pack->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getComision(): ?int
+    {
+        return $this->comision;
+    }
+
+    public function setComision(int $comision): self
+    {
+        $this->comision = $comision;
 
         return $this;
     }

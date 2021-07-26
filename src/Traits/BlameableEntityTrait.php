@@ -16,6 +16,7 @@ trait BlameableEntityTrait
      * @ORM\ManyToOne(targetEntity=User::class)
      * 
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $createdBy;
 
@@ -27,6 +28,7 @@ trait BlameableEntityTrait
      * @ORM\ManyToOne(targetEntity=User::class)
      * 
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $updatedBy;
 

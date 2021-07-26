@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/routerOsAPI")
@@ -24,14 +25,17 @@ class RouterOsController extends AbstractController
 {
     private $api;
 
+    private $passwordEncoder;
+
     /**
      * Undocumented function
      *
      * @param RouterosService $api
      */
-    public function __construct(RouterosService $api)
+    public function __construct(RouterosService $api, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->api = $api;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     /**
@@ -182,8 +186,10 @@ class RouterOsController extends AbstractController
         $counter = 0;
         foreach ($hotspotUsers as $row) {
             $localUser = $em->getRepository(User::class)->findOneBy(['username'=>$row['name']]);
+            $exist = true;
             if (!$localUser instanceof User) {
                 $localUser = new User();
+                $exist = false;
             }
             $localUser
                     ->setMikId($row['.id'])
@@ -192,6 +198,13 @@ class RouterOsController extends AbstractController
                     ->setPassword($localUser->getPlainPassword())
                     ->setIsLocal(false)
                     ->setMikId($row['.id']);
+
+            if($exist && $localUser->getIsLocal()){
+                $password = $this->passwordEncoder->encodePassword ($localUser, $localUser->getPlainPassword());
+				$localUser->setPassword ($password);
+            }
+
+                   
             if (isset($row['profile'])) {
                 $localUser->setProfile($em->getRepository(UserProfile::class)->findOneBy(['name'=>$row['profile']]))
                     ;
@@ -234,6 +247,7 @@ class RouterOsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $id = $request->query->get('id');
         $deuda = $request->query->get('deuda');
+
         $deudaPrice = $request->query->get('deudaPrice');
         
         /** @var User $user */
@@ -271,9 +285,9 @@ class RouterOsController extends AbstractController
             $pack =  new Package();
             $pack
                 ->setUser($user)
-                ->setDebt($deuda)
+                ->setDebt($deuda === 'true')
                 ->setPrice($request->query->get('time'));
-            if($deuda)
+            if($deuda === 'true')
                 $pack->setPriceDebt($deudaPrice);
             $em->persist($pack);
             $user->addPack($pack);
@@ -342,11 +356,35 @@ class RouterOsController extends AbstractController
         $todayAll = $em->getRepository(Package::class)->createdToday($user, false);
         $thisMonthAll = $em->getRepository(Package::class)->createdThisMonth($user, false);
 
-
-
         $investmenst = $em->getRepository(Investmenst::class)->investmentThisMonth($user);
 
+        $totalPay = 0;
+        $gananciaNeta = 0;
+
+        $todayAllMinus = 0;
+
+        $total = 0;
         
+        if(!$this->isGranted('ROLE_SUPER_ADMIN'))
+        {
+            if(!isset($thisMonth[0][1]))
+                $thisMonth[0][1] = 0;
+            $totalPay = $this->getUser()->getComision() * intval($thisMonth[0][1]) / 100;
+            $gananciaNeta = intval($thisMonth[0][1]) - $totalPay;
+        }else{
+            $admins = $em->getRepository(User::class)->findBy(['isLocal' => true]);
+            if( isset($thisMonthAll[0]) && $thisMonthAll[0][1]){
+                $todayAllMinus = $thisMonthAll[0][1];
+               
+                /** @var User $admin */
+                foreach($admins as $admin){
+                    if(!in_array('ROLE_SUPER_ADMIN', $admin->getRoles())){
+                        $percent = $admin->getComision() * intval($todayAllMinus) / 100;
+                        $total = $total+ $percent;
+                    }
+                }
+            }
+        }
 
         return new JsonResponse([
             'today' => isset($today[0]) && $today[0][1] != null ? $today [0][1] : 0,
@@ -357,6 +395,10 @@ class RouterOsController extends AbstractController
 
             'investmenst'  => isset($investmenst[0]) && $investmenst[0][1] != null  ? $investmenst [0][1] : 0,
 
+            'totalPay' => $totalPay,
+            'gananciaNeta' => $gananciaNeta,
+
+            'todayAllMinus' => $total + (isset($thisMonth[0]) && $thisMonth[0][1] != null  ? $thisMonth [0][1] : 0)
         ]);
     }
 
@@ -408,6 +450,31 @@ class RouterOsController extends AbstractController
         $hosts = $this->api->comm('/ip/dhcp-server/lease/print',[]);
         return $this->render('pages/dhcp.html.twig',[
             'hosts' => $hosts
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     * 
+     * @Route("/update-comision", name="update-comisions", options={"expose" = true})
+     */
+    public function updateComision(Request $request){
+        $id = $request->query->get('user');
+        $val = $request->query->get('val');
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->find($id);
+        $user->setComision(intval($val));
+
+        $em->flush();
+
+        return new JsonResponse([
+            'type' => 'success',
+            'message' => 'Datos guardados'
         ]);
     }
 }

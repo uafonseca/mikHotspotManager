@@ -3,12 +3,6 @@
 {% block title %}Dashboard
 {% endblock %}
 
-{% block page_title %}
-<strong style="margin-left: 10px;"> HOTSPOT-MANAGER</strong>
-{% endblock %}
-{% block page_subtitle %}
-V.1.0
-{% endblock %}
 
 {% block breadcrumb %}
 <div class="container-fluid">
@@ -18,11 +12,22 @@ V.1.0
                 <table class="table mb-0">
                     <tbody>
                         <tr>
-                            <td class=""><i class="fa fa-door-open text-primary"></i> {{interface}}</td>
-                            <td class=""><i class="fa fa-arrow-circle-down text-danger"></i> <span id="trafic-up"><i
-                                        class="fa fa-spin fa-spinner"></i></span></td>
-                            <td class=""><i class="fa fa-arrow-circle-up text-info"></i> <span id="trafic-down"><i
-                                        class="fa fa-spin fa-spinner"></i></span></td>
+                            <td class="">
+                                <i class="fa fa-door-open text-primary"></i>
+                                {{interface}}
+                            </td>
+                            <td class="">
+                                <i class="fa fa-arrow-circle-down text-danger"></i>
+                                <span id="trafic-up">
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </span>
+                            </td>
+                            <td class="">
+                                <i class="fa fa-arrow-circle-up text-info"></i>
+                                <span id="trafic-down">
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,10 +38,15 @@ V.1.0
                 <table class="table mb-0">
                     <tbody>
                         <tr>
-                            <td class=""><i class="fa fa-network-wired text-primary"></i> Acceso a internet</td>
+                            <td class="">
+                                <i class="fa fa-network-wired text-primary"></i>
+                                Acceso a internet
+                            </td>
                             <td id="status" class="text-warning">
                                 <i class="fa fa-check-circle"></i>
-                                <span><i class="fa fa-spin fa-spinner"></i></span>
+                                <span>
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -49,13 +59,26 @@ V.1.0
                 <table class="table mb-0">
                     <tbody>
                         <tr>
-                            <td class=""><i class="fa fa-money-bill-wave text-primary"></i> Inversión
-                                [<strong>{{'now'|date("M")}}</strong>] <strong id='investmenst'><i
-                                        class="fa fa-spin fa-spinner"></i></strong></td>
-                            <td class="text-primary"><a class="add-investmens" href="{{path('investmenst_new')}}"
-                                    data-tippy-content="Adicionar"><i class="fa fa-plus-circle"></i></a></td>
-                            <td class="text-primary"><a class="list-investmens" href="{{path('investmenst_index')}}"
-                                    data-tippy-content="Listado"><i class="fa fa-list"></i></a></td>
+                            <td class="">
+                                <i class="fa fa-money-bill-wave text-primary"></i>
+                                Inversión
+                                [<strong>{{'now'|date("M")}}</strong>]
+                                <strong id='investmenst'>
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </strong>
+                            </td>
+                            <td class="text-primary">
+                                <a class="add-investmens" href="{{path('investmenst_new')}}"
+                                    data-tippy-content="Adicionar">
+                                    <i class="fa fa-plus-circle"></i>
+                                </a>
+                            </td>
+                            <td class="text-primary">
+                                <a class="list-investmens" href="{{path('investmenst_index')}}"
+                                    data-tippy-content="Listado">
+                                    <i class="fa fa-list"></i>
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -67,10 +90,53 @@ V.1.0
                 <table class="table mb-0">
                     <tbody>
                         <tr>
-                            <td class=""><i class="fa fa-star-of-david text-primary"></i> Cumplimiento <strong
-                                    id="cump"></strong></td>
-                            <td class=""><i class="fa fa-money-check text-primary"></i> Ganancia <strong
-                                    id="ganacia"></strong></td>
+                            <td class="">
+                                <i class="fa fa-star-of-david text-primary"></i>
+                                Cumplimiento
+                                <strong id="cump"></strong>
+                            </td>
+                            <td class="">
+                                <i class="fa fa-money-check text-primary"></i>
+                                Ganancia
+                                <strong id="ganacia"></strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-3">
+            <div class="card ">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="">
+                                <i class="fa fa-money-bill-wave text-primary"></i>
+                                Total a pagar
+                                [<strong>{{'now'|date("M")}}</strong>] <span class="text-danger">(-{{ app.user.comision}}%)</span>
+                                <strong id='investmenst' class="pull-right">
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card ">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="">
+                                <i class="fa fa-money-check text-primary"></i>
+                                Ganancia neta
+                                <strong id="ganancia" class="pull-right">
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </strong>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -169,13 +235,15 @@ V.1.0
                     <div class="row">
                         <div class="col-md-6">
                             <h3>
-                                <i class="fa fa-users"></i> Usuarios en línea
+                                <i class="fa fa-users"></i>
+                                Usuarios en línea
                             </h3>
                         </div>
                         <div class="col-md-6">
                             <a data-tippy-content="Adicionar usuario" href="{{path('user_new')}}"
-                                class="user btn btn-primary pull-right" style="margin-right: 10px;"><i
-                                    class="fa fa-user-plus"></i></a>
+                                class="user btn btn-primary pull-right" style="margin-right: 10px;">
+                                <i class="fa fa-user-plus"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -185,14 +253,37 @@ V.1.0
                         style="width:100%">
                         <thead>
                             <tr>
-                                <th class="text-center"> <i class="fa fa-user text-primary"></i> CLIENTE</th>
-                                <th class="text-center"><i class="fa fa-keyboard text-secondary"></i> IP</th>
-                                <th class="text-center"><i class="fa fa-address-book text-warning"></i> MAC</th>
-                                <th class="text-center"><i class="fa fa-clock text-info"></i> CONEXIÓN</th>
-                                <th class="text-center">BYTES <i class="fa fa-arrow-down text-danger"></i> </th>
-                                <th class="text-center"><i class="fa fa-clock text-warning"></i> RESTANTE</th>
-                                <th class="text-center"><i class="fa fa-key text-success"></i> LOGIN</th>
-                                <th class="text-center"><i class="fa fa-tasks text-success"></i> ACCIONES</th>
+                                <th class="text-center">
+                                    <i class="fa fa-user text-primary"></i>
+                                    CLIENTE
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-keyboard text-secondary"></i>
+                                    IP
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-address-book text-warning"></i>
+                                    MAC
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-clock text-info"></i>
+                                    CONEXIÓN
+                                </th>
+                                <th class="text-center">BYTES
+                                    <i class="fa fa-arrow-down text-danger"></i>
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-clock text-warning"></i>
+                                    RESTANTE
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-key text-success"></i>
+                                    LOGIN
+                                </th>
+                                <th class="text-center">
+                                    <i class="fa fa-tasks text-success"></i>
+                                    ACCIONES
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -204,12 +295,11 @@ V.1.0
             <div class="card">
                 <div class="card-header">
                     <h3>
-                        <i class="fa fa-list"></i> Actividad reciente
+                        <i class="fa fa-list"></i>
+                        Actividad reciente
                     </h3>
                 </div>
-                <div id="logs" class="card-body">
-
-                </div>
+                <div id="logs" class="card-body"></div>
             </div>
         </div>
     </div>
@@ -229,18 +319,18 @@ V.1.0
         $('.add-investmens, .list-investmens').on('click', function (event) {
             event.preventDefault();
             const scope = $(this);
-            app.dialogs.create({
-                url: scope.attr('href'),
-                columnClass: 'col-md-5'
-            })
+            app.dialogs.create({ url: scope.attr('href'), columnClass: 'col-md-5' })
         })
 
         var table = $('#table').DataTable({
             "ajax": Routing.generate('routerOs-active'),
             responsive: true,
             "columnDefs": [
-                { "className": "dt-center", "targets": "_all" }
-            ],
+                {
+                    "className": "dt-center",
+                    "targets": "_all"
+                }
+            ]
         });
         function ping() {
             $.ajax({
@@ -278,7 +368,7 @@ V.1.0
                             toastr.warning(response.message)
                             table.ajax.reload(function () {
                                 Tippy('[data-tippy-content]', {
-                                    duration: [10, 10],
+                                    duration: [10, 10]
                                 })
                             });
                         }
@@ -290,16 +380,13 @@ V.1.0
         setInterval(function () {
             table.ajax.reload(function () {
                 Tippy('[data-tippy-content]', {
-                    duration: [10, 10],
+                    duration: [10, 10]
                 })
             });
         }, 10000);
         $('.time').on('click', function (event) {
             event.preventDefault();
-            app.dialogs.create({
-                url: Routing.generate('routerOs-add-time'),
-                'containerFluid': true
-            })
+            app.dialogs.create({ url: Routing.generate('routerOs-add-time'), 'containerFluid': true })
         })
     })
     function finance() {
@@ -309,31 +396,37 @@ V.1.0
             success: (response) => {
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
-                $('#today').html('$' + response.today + ' <small style="color:black;">+$' + response.todayAll + '</small>')
-                $('#this-month').html('$' + response.thisMonth + ' <small style="color:black;">+$' + response.thisMonthAll + '</small>')
-                $('#investmenst').html('$' + response.investmenst)
+                    $('#today').html('$' + response.today + ' <small style="color:black;">+$' + response.todayAll + '</small>')
+                    $('#this-month').html('$' + response.thisMonth + ' <small style="color:black;">+$' + response.thisMonthAll + '</small>')
+                    $('#investmenst').html('$' + response.investmenst)
 
-                let total = parseInt(response.thisMonth) + parseInt(response.thisMonthAll);
+                    let percent = 0;
+                    if(parseInt(response.investmenst) === 0){
+                        percent = 100;   
+                    }else{
+                        percent = response.gananciaNeta * 100 / parseInt(response.investmenst);
+                    }
+                    let ganacia = response.todayAllMinus - parseInt(response.investmenst);
 
-                let percent = total * 100 / parseInt(response.investmenst);
+                    let cump = percent.toFixed(1);
 
-                let ganacia = total - parseInt(response.investmenst);
-
-                $('#cump').html(percent.toFixed(1) + '%')
+                    $('#cump').html(!isNaN(cump) ? cump : 0 + '%')
                 if (ganacia < 0) {
-                    $('#ganacia').addClass('text-danger').html(ganacia)
+                    $('#ganacia').addClass('text-danger').html('$'+ganacia)
                 } else {
-                    $('#ganacia').addClass('text-success').html(ganacia)
+                    $('#ganacia').addClass('text-success').html('$'+ganacia)
                 }
 
                 {% else %}
                     $('#today').html('$' + response.today)
                     $('#this-month').html('$' + response.thisMonth)
+                    $('#investmenst').html('$' + response.totalPay)
+                    $('#ganancia').html('$' + response.gananciaNeta)
                 {% endif %}
-                
+
             }
-        });
-    }
+            });
+            }
     function getData() {
         $.ajax({
             url: Routing.generate('routerOs-trafic'),
@@ -366,6 +459,7 @@ V.1.0
         ];
         if (bytes == 0)
             return '0 Byte';
+
 
         var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
         return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];

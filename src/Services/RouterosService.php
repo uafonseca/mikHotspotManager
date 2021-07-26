@@ -110,8 +110,8 @@ class RouterosService
     }
 
     public function calculateTimeFronMoney($money, $price)
-    {
-        /** suponiendo que 15 es el precio x hora */
+    {  
+        if(intval($money) === 0) return "0";
         $d = date_create('00:00:00');
         return $d->add(new DateInterval('PT' . intval((($money / ($price / 60)) / 60) * 60) . 'M'))->format('h:i');
     }
