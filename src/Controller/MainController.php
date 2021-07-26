@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends AbstractController
 {
-    private RouterosService $api;
+    private $api;
 
     public function __construct(RouterosService $api)
     {
