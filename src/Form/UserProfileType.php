@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserProfileType extends AbstractType
 {
-    private RouterosService $api;
+    private $api;
 
     public function __construct(RouterosService $api)
     {

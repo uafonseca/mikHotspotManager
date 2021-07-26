@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\Range;
 class UserType extends AbstractType
 {
 
-    private Security $security;
+    private $security;
     public function __construct(Security $security)
     {
         $this->security = $security;

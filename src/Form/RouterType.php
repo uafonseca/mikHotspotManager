@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RouterType extends AbstractType
 {
-    private RouterosService $api;
+    private $api;
     
     public function __construct(RouterosService $api)
     {

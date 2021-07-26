@@ -10,11 +10,11 @@ use Symfony\Component\Security\Core\Security;
 
 class RouterosService
 {
-    private RouterosAPI $api;
+    private  $api;
 
-    private EntityManagerInterface $em;
+    private  $em;
 
-    private Security $securiry;
+    private  $securiry;
 
   /**
    * Undocumented function
