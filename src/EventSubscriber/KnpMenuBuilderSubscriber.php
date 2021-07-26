@@ -10,9 +10,9 @@ use Symfony\Component\Security\Core\Security;
 
 class KnpMenuBuilderSubscriber implements EventSubscriberInterface
 {
-    private Security $security;
+    private  $security;
 
-    private RouterosService $service;
+    private  $service;
 
     /**
      * Undocumented function
