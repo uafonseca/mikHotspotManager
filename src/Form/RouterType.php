@@ -24,6 +24,15 @@ class RouterType extends AbstractType
             ->add('ip', null, ['label' => 'IP'])
             ->add('username', null, ['label' => 'Usuario'])
             ->add('password', null, ['label' => 'Contraseña'])
+            ->add('hotspotloginType', ChoiceType::class, [
+                    'label' => 'Tipo de login',
+                    'choices' => [
+                        Router::LOGIN_TYPE_USER_AND_PASS => Router::LOGIN_TYPE_USER_AND_PASS,
+                        Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS => Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS
+                    ],
+                    'help_attr' => ['class'=>'text-info', 'style'=>'cursor:help;'],
+                    'help' => 'Debe tener en cuenta la configuración Mac Auth Mode'
+                ])
             ->add('interface', ChoiceType::class, [
                 'label' => 'Interfáz a monitorear',
                 'choices' => $this->getInterfaces(),

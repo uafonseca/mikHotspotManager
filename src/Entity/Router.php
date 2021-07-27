@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Router
 {
+    const LOGIN_TYPE_USER_AND_PASS = 'Usuario y contraseña';
+    const LOGIN_TYPE_MAC_AS_USER_AND_PASS = 'MAC como Usuario y contraseña';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -41,6 +43,11 @@ class Router
      * @ORM\Column(type="string", length=255, nullable = true)
      */
     private $Interface;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $hotspotloginType = self::LOGIN_TYPE_USER_AND_PASS;
 
     public function getId(): ?int
     {
@@ -103,6 +110,18 @@ class Router
     public function setInterface(string $Interface): self
     {
         $this->Interface = $Interface;
+
+        return $this;
+    }
+
+    public function getHotspotloginType(): ?string
+    {
+        return $this->hotspotloginType;
+    }
+
+    public function setHotspotloginType(string $hotspotloginType): self
+    {
+        $this->hotspotloginType = $hotspotloginType;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Package;
+use App\Entity\Router;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -42,9 +43,13 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $users = $this->api->comm("/ip/hotspot/user/print");
         for($i = 0; $i < count($users); $i ++){
+            /** @var User $local */
             $local = $em->getRepository(User::class)->findOneBy(['mikId'=> $users[$i]['.id']]);
-            if($local != null)
+            if($local != null){
                 $users[$i]['localId'] = $local->getId();
+                $users[$i]['mac'] = $local->getMacAddress();
+                $users[$i]['nombre'] = $local->getUsername();
+            }
         }
 
         return $this->render('user/index.html.twig', [
@@ -75,9 +80,15 @@ class UserController extends AbstractController
             else
                 $time = $this->api->calculateTimeFronMoney($form->get("time")->getData(), $user->getProfile()->getPrice());
             try{
+                $username = $user->getUsername();
+                $password = $user->getPlainPassword();
+                if($this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS){
+                    $username = $user->getMacAddress();
+                    $password = $user->getMacAddress();
+                }
                 $id = $this->api->comm("/ip/hotspot/user/add", [
-                    "name" => $user->getUsername(),
-                    "password" => $user->getPlainPassword(),
+                    "name" => $username,
+                    "password" => $password,
                     "profile" => $user->getProfile()->getName(),
                     "limit-uptime" => $time
                 ]);
@@ -105,6 +116,7 @@ class UserController extends AbstractController
         return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
+            'mac_as_user_and_pass' => $this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS
         ]);
     }
 
@@ -128,10 +140,16 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try{
+                $username = $user->getUsername();
+                $password = $user->getPlainPassword();
+                if($this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS){
+                    $username = $user->getMacAddress();
+                    $password = $user->getMacAddress();
+                }
                 $this->api->comm("/ip/hotspot/user/set", [
                     ".id" => $user->getMikId(),
-                    "name" => $user->getUsername(),
-                    "password" => $user->getPlainPassword(),
+                    "name" => $username,
+                    "password" => $password,
                     "profile" => $user->getProfile()->getName(),
                     "limit-uptime" => $form->get("time")->getData() == "" ? 0 : $form->get("time")->getData()
                 ]);
@@ -148,6 +166,7 @@ class UserController extends AbstractController
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
+            'mac_as_user_and_pass' => $this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS
         ]);
     }
 

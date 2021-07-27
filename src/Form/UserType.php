@@ -2,9 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\Router;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Services\RouterosService;
 use Doctrine\ORM\EntityRepository;
+use DoctrineExtensions\Query\Mysql\Regexp;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,13 +23,20 @@ class UserType extends AbstractType
 {
 
     private $security;
-    public function __construct(Security $security)
+    private $api;
+    public function __construct(Security $security, RouterosService $api)
     {
         $this->security = $security;
+        $this->api = $api;
     }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('macAddress', null, [
+                'label' => 'Dirección MAC',
+                'required' => $this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS,
+               'attr' => ['placeholder' => '00:00:00:00:00:00','style'=>'font-size:20px']
+            ])
             ->add('username', null, [
                 'label' => 'Usuario'
             ])

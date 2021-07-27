@@ -78,6 +78,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $comision = 0;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $macAddress;
+
     public function __construct()
     {
         $this->packs = new ArrayCollection();
@@ -267,6 +272,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setComision(int $comision): self
     {
         $this->comision = $comision;
+
+        return $this;
+    }
+
+    public function getMacAddress(): ?string
+    {
+        return $this->macAddress;
+    }
+
+    public function setMacAddress(?string $macAddress): self
+    {
+        $this->macAddress = $macAddress;
 
         return $this;
     }

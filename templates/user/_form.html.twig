@@ -1,12 +1,13 @@
 {{ form_start(form) }}
    <div class="row">
+        <div class="col-md-2">{{form_row(form.macAddress)}}</div>
         <div class="col-md-2">{{form_row(form.username)}}</div>
         <div class="col-md-2">{{form_row(form.plainPassword)}}</div>
         <div class="col-md-2">{{form_row(form.time)}}</div>
         <div class="col-md-2">{{form_row(form.comment)}}</div>
         <div class="col-md-2">{{form_row(form.profile)}}</div>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-             <div class="col-md-2" style="padding-top: 20px;">{{form_row(form.isLocal)}}</div>
+             <div class="col-md-2" style="">{{form_row(form.isLocal)}}</div>
         {% endif %}
    </div> 
    <div class="row">

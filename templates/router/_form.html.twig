@@ -1,5 +1,13 @@
 {{ form_start(form) }}
-{{ form_widget(form) }}
+<div class="row">
+    <div class="col-md-4">{{form_row(form.routerName)}}</div>
+    <div class="col-md-4">{{form_row(form.ip)}}</div>
+    <div class="col-md-4">{{form_row(form.username)}}</div>
+
+    <div class="col-md-4">{{form_row(form.password)}}</div>
+    <div class="col-md-4">{{form_row(form.hotspotloginType)}}</div>
+    <div class="col-md-4">{{form_row(form.interface)}}</div>
+</div>
 <button type="submit" class="btn btn-primary">
     <i class="fa fa-save"></i>
     {{ button_label|default('Guardar') }}

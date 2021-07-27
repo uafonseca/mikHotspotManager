@@ -121,13 +121,19 @@ class RouterOsController extends AbstractController
             $output = [];
 
             foreach ($gethotspotactive as $item) {
+                /** @var User $user */
                 $user = $em->getRepository(User::class)->findOneBy(['username'=>$item['user']]);
                 $id = '';
-                if($user)
+                $name = '';
+                if($user){
                     $id= $user->getId();
+                    $name = $user->getUserName();
+                }else{
+                    $name =  $item['user'];
+                }
                 $action1 = '<a href="#" class="add-time" data-user-id="'.$id.'" data-tippy-content="Acreditar"><i class="fa fa-clock"></a>';
                 $output[] = [
-                    $item['user'],
+                    $name,
                     $item['address'],
                     $item['mac-address'],
                     $this->api->formatDTM($item['uptime']),

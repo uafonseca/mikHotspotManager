@@ -89,9 +89,7 @@
                  url: Routing.generate('routerOs-sync-users'),
                  type: 'get',
                  success :(response) => {
-                     if(response.type === 'success'){
-                         toastr.success('Datos sincronizados')
-                     }
+                         toastr.success('Se sincronizaron '+response.users+" usuarios y "+response.profiles+' perfiles')
                  }
              });
         })
