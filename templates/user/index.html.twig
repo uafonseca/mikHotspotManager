@@ -28,8 +28,8 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ user['nombre'] }}</td>
-                        <td>{{ user['mac'] }}</td>
+                        <td>{{ user['nombre'] is defined ? user['nombre'] : '' }}</td>
+                        <td>{{ user['mac']  is defined ? user['mac'] : ''}}</td>
                         <td>
                             <div class="input-group">
                                 <input id="{{user['name']}}" type="password" value="{{ user['password'] is defined ? user['password']: ''}}" readonly class="form-control" style="max-width: 100px; height: 24px;" placeholder="password" aria-label="password" aria-describedby="basic-addon2">
