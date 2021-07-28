@@ -112,41 +112,38 @@ class RouterOsController extends AbstractController
      */
     public function activeUsers(Request $request):Response
     {
-        if ($this->api->connect()) {
-            $gethotspotactive = $this->api->comm("/ip/hotspot/active/print");
-            $em = $this->getDoctrine()->getManager();
-            $output = [];
+        $gethotspotactive = $this->api->comm("/ip/hotspot/active/print");
+        $em = $this->getDoctrine()->getManager();
+        $output = [];
 
-            foreach ($gethotspotactive as $item) {
-                /** @var User $user */
-                $user = $em->getRepository(User::class)->findOneBy(['username'=>$item['user']]);
-                $id = '';
-                $name = '';
-                if($user){
-                    $id= $user->getId();
-                    $name = $user->getUserName();
-                }else{
-                    $name =  $item['user'];
-                }
-                $action1 = '<a href="#" class="add-time" data-user-id="'.$id.'" data-tippy-content="Acreditar"><i class="fa fa-clock"></a>';
-                $output[] = [
-                    $name,
-                    $item['address'],
-                    $item['mac-address'],
-                    $this->api->formatDTM($item['uptime']),
-                    // $this->api->formatBytes($item['bytes-in'], 2),
-                    $this->api->formatBytes($item['bytes-out'], 2),
-                    isset($item['session-time-left']) ? $this->api->formatDTM($item['session-time-left']) : '',
-                    $item['login-by'],
-                    $action1
-                ];
+        foreach ($gethotspotactive as $item) {
+            /** @var User $user */
+            $user = $em->getRepository(User::class)->findOneBy(['username'=>$item['user']]);
+            $id = '';
+            $name = '';
+            if($user){
+                $id= $user->getId();
+                $name = $user->getUserName();
+            }else{
+                $name =  $item['user'];
             }
-            
-            return new JsonResponse([
+            $action1 = '<a href="#" class="add-time" data-user-id="'.$id.'" data-tippy-content="Acreditar"><i class="fa fa-clock"></a>';
+            $output[] = [
+                $name,
+                $item['address'],
+                $item['mac-address'],
+                $this->api->formatDTM($item['uptime']),
+                // $this->api->formatBytes($item['bytes-in'], 2),
+                $this->api->formatBytes($item['bytes-out'], 2),
+                isset($item['session-time-left']) ? $this->api->formatDTM($item['session-time-left']) : '',
+                $item['login-by'],
+                $action1
+            ];
+        }
+        
+        return new JsonResponse([
             'data' => $output,
         ]);
-        }
-        return new Response(500);
     }
 
 
