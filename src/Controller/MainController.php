@@ -28,6 +28,9 @@ class MainController extends AbstractController
      */
     public function index(RouterRepository $routerRepository): Response
     {
+        // dd($count = $this->api->comm("/ip/hotspot/cookie/print", [
+            
+        // ]));
 
         if (count($routerRepository->findAll()) === 0) {
             $this->addFlash('error', 'Es necesario configurar su router');

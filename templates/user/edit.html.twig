@@ -24,7 +24,6 @@
     {{parent()}}
     <script>
         $(function(){
-            change();
             $('#user_macAddress').keyup(function (e) {
             var r = /([a-f0-9]{2})/i;
             var str = e.target.value.replace(/[^a-f0-9:]/ig, "");
@@ -35,6 +34,7 @@
             });
 
             {% if mac_as_user_and_pass %}
+                change();
                 $('#user_plainPassword').attr('readonly', true);
                 $('#user_macAddress').on('change', function(){
                     $('#user_plainPassword').val($(this).val())
