@@ -74,7 +74,7 @@ class MainController extends AbstractController
         $data = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        if ($httpcode>=200 && $httpcode<300) {
+        if ($httpcode >= 200 && $httpcode < 300) {
             $result =  true;
         } else {
             $result =  false;

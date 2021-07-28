@@ -70,7 +70,6 @@ class RouterOsController extends AbstractController
      */
     public function trafic(Request $request):Response
     {
-        if ($this->api->connect()) {
             $interface = $this->api->getRouter()->getInterface();
             $getinterfacetraffic = $this->api->comm("/interface/monitor-traffic", array(
                 "interface" => $interface ,
@@ -99,8 +98,6 @@ class RouterOsController extends AbstractController
                 'result' => $result,
                 'actives' => $ctive
             ]);
-        }
-        return new Response(500);
     }
 
   
