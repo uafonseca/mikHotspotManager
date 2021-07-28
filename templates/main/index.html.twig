@@ -310,10 +310,13 @@
 {{parent()}}
 <script>
     jQuery(function () {
+        getData();
+        finance();
+        getlogs();
+        ping();
         setInterval(getData, 10000);
         setInterval(getlogs, 10000);
         setInterval(ping, 10000);
-        finance();
         setInterval(finance, 30000);
 
         $('.add-investmens, .list-investmens').on('click', function (event) {
