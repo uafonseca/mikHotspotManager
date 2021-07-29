@@ -27,8 +27,9 @@ $ yar build
 $ php bin/console fos:js-routing:dump --target /public/bundles/fosjsrouting/js/fos_js_routing.js
 ```
 
-5 Modificar la configuración de BD en el archivo .env 
-`DATABASE_URL="mysql://<USUARIO-BASE-DE-DEDATOS>:<CONTRASEÑA-BASE-DE-DATOS>@127.0.0.1:3306/<NOMBRE-BASE-DE-DATOS>"`
+5 Modificar la configuración de BD en el archivo .env
+
+``DATABASE_URL="mysql://<USUARIO-BASE-DE-DEDATOS>:<CONTRASEÑA-BASE-DE-DATOS>@127.0.0.1:3306/<NOMBRE-BASE-DE-DATOS>"``
 
 6 Actualizar la base de datos
 ```sh
