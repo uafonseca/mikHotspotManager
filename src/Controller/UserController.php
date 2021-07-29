@@ -140,6 +140,12 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try{
+                if($user->getIsLocal()){
+                    $password = $this->passwordEncoder->encodePassword ($user, $user->getPlainPassword());
+                    $user->setPassword ($password);
+                }else{
+                    $user->setPassword($user->getPlainPassword());
+                }
                 $username = $user->getUsername();
                 $password = $user->getPlainPassword();
                 if($this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS){
