@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\AppEvents;
 use App\Entity\Investmenst;
+use App\Entity\Log;
 use App\Entity\Package;
 use App\Entity\Router;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Event\LogEvent;
 use App\Services\RouterosAPI;
 use App\Services\RouterosService;
 use DateTime;
@@ -17,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/routerOsAPI")
@@ -27,15 +31,18 @@ class RouterOsController extends AbstractController
 
     private $passwordEncoder;
 
+    private $dispatcher;
+
     /**
      * Undocumented function
      *
      * @param RouterosService $api
      */
-    public function __construct(RouterosService $api, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(RouterosService $api, UserPasswordEncoderInterface $passwordEncoder, EventDispatcherInterface $eventDispatcher)
     {
         $this->api = $api;
         $this->passwordEncoder = $passwordEncoder;
+        $this->dispatcher = $eventDispatcher;
     }
 
     /**
@@ -310,33 +317,13 @@ class RouterOsController extends AbstractController
      */
     public function hotsPotLog()
     {
-        $getlog = $this->api->comm("/log/print", array("?topics" => "hotspot,info,debug", ));
-
-        $log = array_slice(array_reverse($getlog), 0, 10);
-        $row = [];
-        for ($i = 0; $i < 10; $i++) {
-            $mess = explode(":", $log[$i]['message']);
-            if (substr($log[$i]['message'], 0, 2) == "->") {
-                $time = str_replace(" ", "<br>", $log[$i]['time']);
-            }
-           
-            $message = isset($mess[2]) ? str_replace("trying to ", "", $mess[2]) :'';
-            if (isset($mess[3])) {
-                $message.":".$mess[3];
-            }
-            
-            
-            $ip = substr($mess[1], 1);
-            $ip = str_replace(" ", "<br>", $ip);
-
-            $row[] = [
-                'time' => $time,
-                'ip' => $ip,
-                'message' => $message
-            ];
-        }
+       
+        $log = new LogEvent(new Log());
+        $this->dispatcher->dispatch($log, AppEvents::APP_UPDATE_LOGS);
+        
+        $em = $this->getDoctrine()->getManager();
         return $this->render('main/logs.html.twig', [
-            'logs' => $log
+            'logs' => $em->getRepository(Log::class)->getLastLogs()
         ]);
     }
     /**

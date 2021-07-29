@@ -83,9 +83,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $macAddress;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Log::class, mappedBy="user")
+     */
+    private $logs;
+
     public function __construct()
     {
         $this->packs = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
    
@@ -284,6 +290,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMacAddress(?string $macAddress): self
     {
         $this->macAddress = $macAddress;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Log[]
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(Log $log): self
+    {
+        if (!$this->logs->contains($log)) {
+            $this->logs[] = $log;
+            $log->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(Log $log): self
+    {
+        if ($this->logs->removeElement($log)) {
+            // set the owning side to null (unless already changed)
+            if ($log->getUser() === $this) {
+                $log->setUser(null);
+            }
+        }
 
         return $this;
     }

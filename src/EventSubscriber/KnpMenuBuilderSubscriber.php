@@ -29,7 +29,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KnpMenuEvent::class => ['onSetupMenu', 100],
+            KnpMenuEvent::class => ['onSetupMenu', 100], 
         ];
     }
     

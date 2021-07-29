@@ -8,10 +8,10 @@
     </thead>
     <tbody>
         {% for row in logs %}
-            <tr>
-                <td>{{row['time']}}</td>
+            <tr data-tippy-content="{{row.ip}}">
+                <td>{{row.time|date('h:i')}}</td>
                 
-                <td>{{row['message']|replace({'->:':'','trying to':''})}}</td>
+                <td>{{row.user.username ~ row.message}}</td>
             </tr>
         {% endfor %}
     </tbody>
