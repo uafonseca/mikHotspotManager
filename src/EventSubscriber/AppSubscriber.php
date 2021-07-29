@@ -33,7 +33,7 @@ class AppSubscriber implements EventSubscriberInterface
     {
         $getlog = $this->api->comm("/log/print", array("?topics" => "hotspot,info,debug", ));
         error_reporting(0);
-        $log = array_slice(array_reverse($getlog), 0, 10);
+        $log = array_reverse($getlog);
         $row = [];
         for ($i = 0; $i < 10; $i++) {
             $mess = explode(":", $log[$i]['message']);

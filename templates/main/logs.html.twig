@@ -11,7 +11,7 @@
             <tr data-tippy-content="{{row.ip}}">
                 <td>{{row.time|date('h:i')}}</td>
                 
-                <td>{{row.user.username ~ row.message}}</td>
+                <td><strong>{{row.user.username}}</strong>{{ row.message}}</td>
             </tr>
         {% endfor %}
     </tbody>
