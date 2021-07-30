@@ -22,12 +22,12 @@ class LogRepository extends ServiceEntityRepository
 
     public function getLastLogs(){
         return $this->createQueryBuilder('l')
-            ->andWhere('YEAR(l.time) = :y AND MONTH(l.time) = :m AND DAY(l.time) =:d')
-            ->setParameters([
-                'y' =>  date('Y'),
-                'd' => date('d'),
-                'm' => date('m')
-            ])
+            // ->andWhere('YEAR(l.time) = :y AND MONTH(l.time) = :m AND DAY(l.time) =:d')
+            // ->setParameters([
+            //     'y' =>  date('Y'),
+            //     'd' => date('d'),
+            //     'm' => date('m')
+            // ])
             ->orderBy('l.time','DESC')
             ->setMaxResults(10)
             ->getQuery()
