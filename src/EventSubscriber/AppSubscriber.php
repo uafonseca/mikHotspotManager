@@ -60,24 +60,21 @@ class AppSubscriber implements EventSubscriberInterface
                 }
                 $array =  explode(" ", $addres);
             
-                try {
-                    if ($time && isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
-                        'time' => new DateTime($time),
-                        'ip' => $array[1],
-                        'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),
-                        'message' => $message
-                    ])) {
-                        $logObj = new Log();
-                        $logObj
-                            ->setIp($array[1])
-                            ->setTime(new DateTime($time))
-                            ->setUser($this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]))
-                            ->setMessage($message);
-                        
-                        $this->em->persist($logObj);
-                        $this->em->flush();
-                    }
-                } catch (Exception $e) {
+                if ($time && isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
+                    'time' => new DateTime($time),
+                    'ip' => $array[1],
+                    'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),
+                    'message' => $message
+                ])) {
+                    $logObj = new Log();
+                    $logObj
+                        ->setIp($array[1])
+                        ->setTime(new DateTime($time))
+                        ->setUser($this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]))
+                        ->setMessage($message);
+                    
+                    $this->em->persist($logObj);
+                    $this->em->flush();
                 }
             }
         }
