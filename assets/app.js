@@ -69,3 +69,12 @@ $.extend(true, $.fn.dataTable.defaults, {
       },
     },
   });
+
+   /* Notificando el error de una peticion por Ajax con Toastr */
+   $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+    if (jqxhr.statusText === 'abort') {
+        return;
+    }
+    console.log(jqxhr.statusText)
+    toastr["error"]("Se ha producido un error en una petición Ajax");
+});

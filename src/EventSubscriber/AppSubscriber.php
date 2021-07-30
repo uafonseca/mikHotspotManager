@@ -38,7 +38,10 @@ class AppSubscriber implements EventSubscriberInterface
         for ($i = 0; $i < 10; $i++) {
             $mess = explode(":", $log[$i]['message']);
             if (substr($log[$i]['message'], 0, 2) == "->") {
-                $time =  $log[$i]['time'];
+                if($ex = explode(" ", $log[$i]['time']))
+                    $time = $ex[1];
+                else
+                    $time =  $log[$i]['time'];
             
                 if (count($mess) > 6) {
                     $addres = $mess[1] . ":" . $mess[2] . ":" . $mess[3] . ":" . $mess[4] . ":" . $mess[5] . ":" . $mess[6];
@@ -57,8 +60,7 @@ class AppSubscriber implements EventSubscriberInterface
                 $array =  explode(" ", $addres);
             
 
-                 
-                if( isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
+                if( $time && isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
                     'time' => new DateTime($time),
                     'ip' => $array[1],
                     'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),

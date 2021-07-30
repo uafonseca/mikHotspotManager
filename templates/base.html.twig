@@ -27,6 +27,7 @@ V.1.0
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 {{ encore_entry_script_tags('app') }}
+
 {% set alert = {'success': 'success', 'error': 'error', 'info': 'info', 'warning': 'warning'} %}
 {% for flashType in alert %}
 {% for flashMessage in app.session.flashbag.get(flashType) %}
