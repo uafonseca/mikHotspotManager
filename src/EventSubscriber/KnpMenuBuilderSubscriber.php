@@ -99,6 +99,12 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             ])->setLabelAttribute('icon', 'fas fa-list');
         }
 
+        $menu->addChild('logs', [
+            'label' => 'Logs',
+            'route' => 'log_index',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fa fa-list');
+
         $menu->addChild('hosts', [
             'label' => 'Hosts',
             'route' => 'routerOs-hosts',

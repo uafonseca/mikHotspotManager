@@ -20,7 +20,13 @@ class LogRepository extends ServiceEntityRepository
     }
 
 
-    public function getLastLogs(){
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getLastLogs()
+    {
         return $this->createQueryBuilder('l')
             // ->andWhere('YEAR(l.time) = :y AND MONTH(l.time) = :m AND DAY(l.time) =:d')
             // ->setParameters([
@@ -28,9 +34,32 @@ class LogRepository extends ServiceEntityRepository
             //     'd' => date('d'),
             //     'm' => date('m')
             // ])
-            ->orderBy('l.time','DESC')
+            ->orderBy('l.time', 'DESC')
             ->setMaxResults(10)
             ->getQuery()
+            ->getResult();
+    }
+
+    public function findReverse(array $query = [])
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->orderBy('l.time', 'DESC');
+
+            if(count($query) > 0){
+                foreach($query as $key => $value){
+                    if($key === 'user'){
+                        $qb->join('l.user', 'u')
+                            ->andWhere('u.username =:user')
+                            ->setParameter('user',$value)
+                            ;
+                    }else{
+                        $qb
+                        ->andWhere('l.'.$key.' ='.$value);
+                    }
+                }
+            }
+
+        return $qb ->getQuery()
             ->getResult();
     }
 

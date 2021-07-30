@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log index{% endblock %}
+
+{% block page_content %}
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-4"><h3><i class="fa fa-list"></i> Listado de logs</h3></div>
+            {# <div class="col-md-8">
+                <label>
+                    Usuario
+                    <input type="text" class="form-control">
+                </label>
+            </div> #}
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="table" class="table display nowrap table-striped table-bordered" cellspacing="0" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Ip</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr class="{% if 'log in by' in log.message %}bg-success{% elseif 'logged out' in log.message %}bg-danger{% else %}bg-warning{% endif %}">
+                    <td><a style="color: white;" data-tippy-content="Logs del usuario {{ log.user.username }}" href="{{path('log_index',{user:log.user.username})}}"><strong>{{ log.user.username }}</strong></a></td>
+                    <td>{{ log.time ? log.time|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ log.ip }}</td>
+                    <td>{{ log.message }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+    <script>
+        jQuery(function () {
+            var table = $('#table').DataTable({
+            responsive: true,
+            "order": [[ 1, "desc" ]],
+            "columnDefs": [
+                {
+                    "className": "dt-center",
+                    "targets": "_all"
+                }
+            ]
+        });
+        })
+    </script>
+{% endblock %}
