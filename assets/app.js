@@ -69,12 +69,29 @@ $.extend(true, $.fn.dataTable.defaults, {
       },
     },
   });
+  function check(){
+    $.ajax({
+      url: '/annonimus',
+      success:function(data){
+        if(data.type === 'success'){
+          if(data.online === false){
+            location.reload();
+          }
+        }
+      }
+    })
+  }
+
+  $(document).ready(function(){
+
+    setInterval(check,5000)
+  })
 
    /* Notificando el error de una peticion por Ajax con Toastr */
    $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
-    if (jqxhr.statusText === 'abort') {
+    if (jqxhr.statusText === 'abort' || jqxhr.statusText === 'canceled') {
         return;
     }
     console.log(jqxhr.statusText)
-    toastr["error"]("Se ha producido un error en una petición Ajax");
+    
 });

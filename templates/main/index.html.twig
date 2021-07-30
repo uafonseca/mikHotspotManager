@@ -440,6 +440,7 @@
                 $('#trafic-up').html(bytesToSize(bytesRx))
                 $('#trafic-down').html(bytesToSize(bytesTx))
                 $('#actives').html(response['actives'])
+                $('title').html('Dashboard ( ' + response['actives']+ ' )')
             }
         });
     }

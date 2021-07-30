@@ -10,6 +10,10 @@ V.1.0
 {% block logo_large %}
     <img src="{{asset('build/assets/images/logo.png')}}" width="150" alt="">
 {% endblock logo_large %}
+{% block head %}
+    {{ parent() }}
+    <link rel="icon" href="{{asset('build/assets/images/favico.png')}}" type="image/x-icon">
+{% endblock %}
 
 {% block stylesheets %}
 {{parent()}}
