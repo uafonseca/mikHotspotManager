@@ -51,9 +51,9 @@ class AppSubscriber implements EventSubscriberInterface
                 }
 
                 if (count($mess) > 6) {
-                    $message = str_replace("trying to", "", $mess[7] . " " . $mess[8] . " " . $mess[9] . " " . $mess[10]);
+                    $message = $mess[7] . " " . $mess[8] . " " . $mess[9] . " " . $mess[10];
                 } else {
-                    $message = str_replace("trying to", "", $mess[2] . " " . $mess[3] . " " . $mess[4] . " " . $mess[5]);
+                    $message = $mess[2] . " " . $mess[3] . " " . $mess[4] . " " . $mess[5];
                 }
                 if ($addres[0] === " ") {
                     $addres = substr($addres, 1);
