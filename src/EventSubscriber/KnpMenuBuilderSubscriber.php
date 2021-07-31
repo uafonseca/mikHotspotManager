@@ -99,6 +99,12 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             ])->setLabelAttribute('icon', 'fas fa-list');
         }
 
+        $menu->addChild('finace', [
+            'label' => 'Finanzas',
+            'route' => 'finance',
+            'childOptions' => $event->getChildOptions(),
+        ])->setLabelAttribute('icon', 'fa fa-money-bill-wave');
+
         $menu->addChild('logs', [
             'label' => 'Logs',
             'route' => 'log_index',

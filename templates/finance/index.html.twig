@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Finanzas{% endblock %}
+
+{% block page_content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        
+                    </div>
+                    <div class="card-body">
+                        <table id="table" class="display nowrap table-striped table-bordered" cellspacing="0"
+                        style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Monto</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set suma = 0 %}
+                                {% for row in alltoday %}
+                                    <tr>
+                                        <td>{{row.price}}</td>
+                                        <td>{{row.user.username}}</td>
+                                        <td>{{row.createdAt|date("m/d/Y h:i:s")}}</td>
+                                        {% set suma = row.price + suma %}
+                                    </tr>
+                                {% endfor %}
+                                    <tr>
+                                        <td>
+                                            Total: {{suma}}
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

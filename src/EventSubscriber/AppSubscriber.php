@@ -59,10 +59,15 @@ class AppSubscriber implements EventSubscriberInterface
                     $addres = substr($addres, 1);
                 }
                 $array =  explode(" ", $addres);
-            
-                try {
-                    if ($time && isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
-                        'time' => new DateTime($time),
+                
+                $explode = explode(" ", $time);
+                if(count($explode) > 1)
+                    $fecha = new DateTime($explode[1]);
+                else
+                    $fecha = new DateTime($time);
+
+                    if (isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
+                        'time' => $fecha,
                         'ip' => $array[1],
                         'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),
                         'message' => $message
@@ -70,15 +75,14 @@ class AppSubscriber implements EventSubscriberInterface
                         $logObj = new Log();
                         $logObj
                             ->setIp($array[1])
-                            ->setTime(new DateTime($time))
+                            ->setTime($fecha)
                             ->setUser($this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]))
                             ->setMessage($message);
                         
                         $this->em->persist($logObj);
                         $this->em->flush();
                     }
-                } catch (Exception $e) {
-                }
+               
             }
         }
     }

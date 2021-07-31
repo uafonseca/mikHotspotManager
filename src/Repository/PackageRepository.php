@@ -54,6 +54,25 @@ class PackageRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function allToday(User $user){
+        return $this->createQueryBuilder('p')
+            ->andWhere('MONTH(p.createdAt) = :m')
+            ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
+            ->andWhere('p.createdBy = :user')
+            ->setParameter('user', $user)
+            ->setParameter('m', date('m'))
+            ->setParameter('y', date('Y'))
+            ->setParameter('d', date('d'))
+            ->getQuery()
+            ->getResult();
+
+    }
+
  /**
   * Undocumented function
   *
