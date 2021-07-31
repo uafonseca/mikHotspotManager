@@ -5,7 +5,7 @@
 {% block page_content_before %}
 <div class="container">
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <p class="card-text"><i class="fa fa-plus"></i> Adicionar perfil</p>
@@ -17,4 +17,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready( function () {
+            $('#user_profile_roles').select2({})
+        } );
+</script>
 {% endblock %}

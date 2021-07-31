@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <p> <i class="fa fa-pencil-alt"></i> Editar perfil</p>
                 </div>
                 <div class="col-md-6 text-right">
@@ -22,4 +22,12 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready( function () {
+            $('#user_profile_roles').select2({})
+        } );
+</script>
 {% endblock %}
