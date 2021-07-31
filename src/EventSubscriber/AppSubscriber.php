@@ -65,15 +65,39 @@ class AppSubscriber implements EventSubscriberInterface
                     $fecha = new DateTime($explode[1]);
                 else
                     $fecha = new DateTime($time);
-
-                    if (isset($array[0]) && $array[0] != "" && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
-                        'time' => $fecha,
-                        'ip' => $array[1],
-                        'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),
-                        'message' => $message
-                    ])) {
+                    $user = $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]);
+                    if(!$user instanceof User)
+                        $user = $array[0];
+                    if (isset($array[0]) && $array[0] != "" && isset($array[1])) {
+                        $exist = false;
+                        $anonimus = false;
                         $logObj = new Log();
-                        $logObj
+                        if(!$user instanceof User){
+                            $logObj->setAnonimus($user);          
+                            $anonimus = true;
+                        }else{
+                            if($anonimus){
+                                $obj =  $this->em->getRepository(Log::class)->findOneBy([
+                                    'time' => $fecha,
+                                    'ip' => $array[1],
+                                    'anonimus' => $user,
+                                    'message' => $message
+                                ]);
+                            }else{
+                                $obj =  $this->em->getRepository(Log::class)->findOneBy([
+                                    'time' => $fecha,
+                                    'ip' => $array[1],
+                                    'user' => $user,
+                                    'message' => $message
+                                ]);
+                            }
+                            
+                            if($obj instanceof Log)
+                                $exist = true;
+                        }
+                            
+                        if(!$exist){
+                            $logObj
                             ->setIp($array[1])
                             ->setTime($fecha)
                             ->setUser($this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]))
@@ -81,6 +105,11 @@ class AppSubscriber implements EventSubscriberInterface
                         
                         $this->em->persist($logObj);
                         $this->em->flush();
+                        }
+                       
+                      
+                        
+                       
                     }
                
             }

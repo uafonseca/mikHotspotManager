@@ -37,6 +37,11 @@ class Log
      */
     private $message;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $anonimus;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Log
     public function setMessage(?string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getAnonimus(): ?string
+    {
+        return $this->anonimus;
+    }
+
+    public function setAnonimus(string $anonimus): self
+    {
+        $this->anonimus = $anonimus;
 
         return $this;
     }
