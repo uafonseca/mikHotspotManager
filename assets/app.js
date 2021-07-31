@@ -39,6 +39,9 @@ import ('toastr');
 import('toastr/build/toastr.css');
 window.toastr = toastr;
 import './forms'
+import 'bootstrap-datepicker';
+import 'select2'
+import 'select2/dist/css/select2.min.css'
 
 /* Configurando el idioma español para todas las tablas */
 $.extend(true, $.fn.dataTable.defaults, {

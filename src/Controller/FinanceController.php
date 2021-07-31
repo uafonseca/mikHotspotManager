@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Package;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,8 +23,13 @@ class FinanceController extends AbstractController
 
         $today = $em->getRepository(Package::class)->allToday($this->getUser());
 
+        $users = $em->getRepository(User::class)->findAll();
+
+        $filters = $em->getRepository(Package::class)->findByFilters($request->query->all());
         return $this->render('finance/index.html.twig', [
             'alltoday' => $today,
+            'users' => $users,
+            'filters' => $filters
         ]);
     }
 }
