@@ -11,7 +11,7 @@
         <tr data-tippy-content="{{row.ip}}" class="{% if 'log in by' in row.message %}table-success{% elseif 'logged out' in row.message %}table-danger{% else %}table-warning{% endif %}">
                 <td>{{row.time|date('h:i')}}</td>
                 
-                <td><strong>{{row.user.username}}</strong>{{ row.message}}</td>
+                <td><strong>{{row.user.username is defined ? row.user.username : ''}}</strong>{{ row.message}}</td>
             </tr>
         {% endfor %}
     </tbody>

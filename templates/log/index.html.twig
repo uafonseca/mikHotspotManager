@@ -28,7 +28,7 @@
             <tbody>
                 {% for log in logs %}
                 <tr class="{% if 'log in by' in log.message %}bg-success{% elseif 'logged out' in log.message %}bg-danger{% else %}bg-warning{% endif %}">
-                    <td><a style="color: white;" data-tippy-content="Logs del usuario {{ log.user.username }}" href="{{path('log_index',{user:log.user.username})}}"><strong>{{ log.user.username }}</strong></a></td>
+                    <td><a style="color: white;" data-tippy-content="Logs del usuario {{ log.user.username is defined ? log.user.username : '' }}" href="{{path('log_index',{user:log.user.username is defined ? log.user.username : ''})}}"><strong>{{ log.user.username is defined ? log.user.username : '' }}</strong></a></td>
                     <td>{{ log.time ? log.time|date('Y-m-d H:i:s') : '' }}</td>
                     <td>{{ log.ip }}</td>
                     <td>{{ log.message }}</td>
