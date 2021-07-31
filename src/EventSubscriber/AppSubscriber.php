@@ -51,9 +51,9 @@ class AppSubscriber implements EventSubscriberInterface
                 }
 
                 if (count($mess) > 6) {
-                    $message = $mess[7] . " " . $mess[8] . " " . $mess[9] . " " . $mess[10];
+                    $message = str_replace("trying to", "", $mess[7] . " " . $mess[8] . " " . $mess[9] . " " . $mess[10]);
                 } else {
-                    $message = $mess[2] . " " . $mess[3] . " " . $mess[4] . " " . $mess[5];
+                    $message = str_replace("trying to", "", $mess[2] . " " . $mess[3] . " " . $mess[4] . " " . $mess[5]);
                 }
                 if ($addres[0] === " ") {
                     $addres = substr($addres, 1);
@@ -66,7 +66,7 @@ class AppSubscriber implements EventSubscriberInterface
                 else
                     $fecha = new DateTime($time);
 
-                    if (isset($array[0]) && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
+                    if (isset($array[0]) && $array[0] != "" && isset($array[1]) && null === $this->em->getRepository(Log::class)->findOneBy([
                         'time' => $fecha,
                         'ip' => $array[1],
                         'user' => $this->em->getRepository(User::class)->findOneBy(['username' => $array[0]]),
