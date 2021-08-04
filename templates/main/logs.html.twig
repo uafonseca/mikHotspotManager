@@ -9,7 +9,7 @@
     <tbody>
         {% for row in logs %}
         <tr data-tippy-content="{{row.ip}}" class="{% if 'log in by' in row.message %}table-success{% elseif 'logged out' in row.message %}table-danger{% else %}table-warning{% endif %}">
-                <td>{{row.time|date('d/m/Y') ~'<br>'~row.time|date('h:i A')}}</td>
+                <td>{{row.time|date('d/m/Y') ~'<br>'~row.time|date('H:i A')|raw}}</td>
                 {% if row.anonimus is not null %}
                     <td><strong  class="text-danger">{{row.anonimus}}</strong>{{ row.message}}</td>
                 {% else %}
