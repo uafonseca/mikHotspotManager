@@ -1,119 +1,124 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Finanzas{% endblock %}
+{% block title %}Finanzas
+{% endblock %}
 
 {% block page_content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fa fa-money-bill-alt"></i> Ingresos hoy</h3>
-                </div>
-                <div class="card-body">
-                    <table id="table" class="display nowrap table-striped table-bordered" cellspacing="0"
-                        style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Monto</th>
-                                <th>Usuario</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% set suma = 0 %}
-                            {% for row in alltoday %}
-                            <tr>
-                                <td>{{row.price}}</td>
-                                <td>{{row.user.username}}</td>
-                                <td>{{row.createdAt|date("m/d/Y h:i:s")}}</td>
-                                {% set suma = row.price + suma %}
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>
-                                    Total: {{suma}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3><i class="fa fa-search-dollar"></i> Búsqueda avanzada</h3>
-                        </div>
-                        <div class="col-md-6">
-                            <h1></h1>
-                        </div>
-                    </div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header">
+						<h3>
+							<i class="fa fa-money-bill-alt"></i>
+							Ingresos hoy</h3>
+					</div>
+					<div class="card-body">
+						<table id="table" class="display nowrap table-striped table-bordered" cellspacing="0" style="width:100%">
+							<thead>
+								<tr>
+									<th>Monto</th>
+									<th>Usuario</th>
+									<th>Fecha</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set suma = 0 %}
+								{% for row in alltoday %}
+									<tr>
+										<td>{{row.price}}</td>
+										<td>{{row.user.username}}</td>
+										<td>{{row.createdAt|date("m/d/Y h:i:s")}}</td>
+										{% set suma = row.price + suma %}
+									</tr>
+								{% endfor %}
+								<tr>
+									<td>
+										Total:
+										{{suma}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<div class="row">
+							<div class="col-md-6">
+								<h3>
+									<i class="fa fa-search-dollar"></i>
+									Búsqueda avanzada</h3>
+							</div>
+							<div class="col-md-6">
+								<h1></h1>
+							</div>
+						</div>
 
-                </div>
-                <div class="card-body">
-                    <form action="" method="get">
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="">Usuario</label>
-                                <select name="user" class="form-control" id="user" placeholder="Usuario">
-                                    <option value="">-SELECCIONE-</option>
-                                    {% for row in users %}
-                                        <option {% if app.request.query.get('user') == row.id %}selected{% endif %} value="{{row.id}}">{{row.username}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="">Fecha</label>
-                                <input type="date" value="{{app.request.query.get('fecha')}}" class="form-control" name="fecha" id="fecha">
-                            </div>
-                            <div class="col mt-5">
-                                <button type="submit" class="btn btn-primary btn-lg pull-right"><i
-                                        class="fa fa-search"></i>
-                                    Buscar</button>
-                            </div>
-                        </div>
-                    </form>
-                    <table id="table" class="display nowrap table-striped table-bordered" cellspacing="0"
-                        style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Monto</th>
-                                <th>Usuario</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% set suma = 0 %}
-                            {% for row in filters %}
-                            <tr>
-                                <td>{{row.price}}</td>
-                                <td>{{row.user.username}}</td>
-                                <td>{{row.createdAt|date("m/d/Y h:i:s")}}</td>
-                                {% set suma = row.price + suma %}
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>
-                                    Total: {{suma}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+					</div>
+					<div class="card-body">
+						<form action="" method="get">
+							<div class="row mb-3">
+								<div class="col">
+									<label for="">Usuario</label>
+									<select name="user" class="form-control" id="user" placeholder="Usuario">
+										<option value="">-SELECCIONE-</option>
+										{% for row in users %}
+											<option {% if app.request.query.get('user') == row.id %} selected {% endif %} value="{{row.id}}">{{row.username}}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="col">
+									<label for="">Fecha</label>
+									<input type="date" value="{{app.request.query.get('fecha')}}" class="form-control" name="fecha" id="fecha">
+								</div>
+								<div class="col mt-5">
+									<button type="submit" class="btn btn-primary btn-lg pull-right">
+										<i class="fa fa-search"></i>
+										Buscar</button>
+								</div>
+							</div>
+						</form>
+						<table id="table" class="display nowrap table-striped table-bordered" cellspacing="0" style="width:100%">
+							<thead>
+								<tr>
+									<th>Monto</th>
+									<th>Usuario</th>
+									<th>Fecha</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set suma = 0 %}
+								{% for row in filters %}
+									<tr>
+										<td>{{row.price}}</td>
+										<td>{{row.user.username}}</td>
+										<td>{{row.createdAt|date("m/d/Y h:i:s")}}</td>
+										{% set suma = row.price + suma %}
+									</tr>
+								{% endfor %}
+								<tr>
+									<td>
+										Total:
+										{{suma}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 {% block javascripts %}
-{{parent()}}
-<script>
-    jQuery(function () {
-        $('#user').select2({});
+	{{parent()}}
+	<script>
+		jQuery(function () {
+$('#user').select2({});
 
-    })
-</script>
+})
+	</script>
 {% endblock %}

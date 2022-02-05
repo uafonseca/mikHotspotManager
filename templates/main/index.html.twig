@@ -235,8 +235,23 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h3>
+                                <i class="fa fa-network-wired"></i>
+                                 Monitor de tráfico
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body table-responsive">
+                    <div class="pd-t-10 pd-r-10;" id="trafficMonitor"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>
                                 <i class="fa fa-users"></i>
-                                Usuarios en línea
+                                 Usuarios en línea
                             </h3>
                         </div>
                         <div class="col-md-6">
@@ -308,6 +323,8 @@
 {% endblock %}
 {% block javascripts %}
 {{parent()}}
+<script src="{{asset('plugins/highcharts/highcharts.js')}}"></script>
+<script src="{{asset('plugins/highcharts/highcharts.theme.js')}}"></script>
 <script>
     jQuery(function () {
         getData();
@@ -318,7 +335,7 @@
         setInterval(getlogs, 10000);
         setInterval(ping, 10000);
         setInterval(finance, 30000);
-
+        trafficMonitor();
         $('.add-investmens, .list-investmens').on('click', function (event) {
             event.preventDefault();
             const scope = $(this);
@@ -437,6 +454,10 @@
             success: (response) => {
                 let bytesTx = response['result'][0].data[0];
                 let bytesRx = response['result'][1].data[0];
+                txrx = '[{"name":"Tx","data":["' + response['result'][0].data[0] + '"]},{"name":"Rx","data":["' + response['result'][1].data[0] + '"]}]';
+
+                localStorage.setItem("_traffic_data", txrx);
+                
                 $('#trafic-up').html(bytesToSize(bytesRx))
                 $('#trafic-down').html(bytesToSize(bytesTx))
                 $('#actives').html(response['actives'])
@@ -468,5 +489,153 @@
         var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
         return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
     }
+
+
+
+
+    function trafficMonitor() {
+    $(document).ready(function() {
+        
+        
+        // $("#iface-name").html(iface)
+        var chart;
+        // if (theme == "light") {
+        //     Highcharts.setOptions(light);
+        // } else if (theme == "dark") {
+        //     Highcharts.setOptions(dark);
+        // } else if (theme == "blue") {
+        //     Highcharts.setOptions(blue);
+        // } else if (theme == "green") {
+        //     Highcharts.setOptions(green);
+        // } else if (theme == "pink") {
+        //     Highcharts.setOptions(pink);
+        // }
+        Highcharts.setOptions(light);
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+
+
+        Highcharts.addEvent(Highcharts.Series, 'afterInit', function() {
+            this.symbolUnicode = {
+                circle: '●',
+                diamond: '♦',
+                square: '■',
+                triangle: '▲',
+                'triangle-down': '▼'
+            }[this.symbol] || '●';
+        });
+
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'trafficMonitor', 
+                animation: Highcharts.svg,
+                type: 'areaspline',
+                events: {
+
+                    load: function() {
+
+                        window.ifaceI = setInterval(function() {
+
+                            var txrx = localStorage.getItem("_traffic_data")
+                            var midata = JSON.parse(txrx);
+
+                            if (midata.length > 0) {
+                                var TX = parseInt(midata[0].data);
+                                var RX = parseInt(midata[1].data);
+                                var x = (new Date()).getTime();
+                                try {
+                                    shift = chart.series[0].data.length > 25;
+                                    chart.series[0].addPoint([x, TX], true, shift);
+                                    chart.series[1].addPoint([x, RX], true, shift);
+                                    clearInterval(window.ifaceI)
+                                } catch (err) {}
+                            }
+
+                        
+                        
+                        window.ifaceII = setInterval(function() {
+
+                            var txrx = localStorage.getItem("_traffic_data")
+                            var midata = JSON.parse(txrx);
+
+                            if (midata.length > 0) {
+                                var TX = parseInt(midata[0].data);
+                                var RX = parseInt(midata[1].data);
+                                var x = (new Date()).getTime();
+                                try {
+                                    shift = chart.series[0].data.length > 25;
+                                    chart.series[0].addPoint([x, TX], true, shift);
+                                    chart.series[1].addPoint([x, RX], true, shift);
+                                } catch (err) {}
+                            }
+
+                        },5000) }
+
+                        , 1500);
+
+                    }
+                }
+            },
+            title: {
+                text: ""
+            },
+
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                maxZoom: 20 * 1000,
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: null
+                },
+                labels: {
+                    formatter: function() {
+                        var bytes = this.value;
+                        var sizes = ['<br>bps', '<br>kbps', '<br>Mbps', '<br>Gbps', '<br>Tbps'];
+                        if (bytes == 0) return '0 bps';
+                        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                        return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+                    },
+                },
+            },
+
+            series: [{
+                name: 'Tx',
+                data: [],
+                marker: {
+                    symbol: 'circle'
+                }
+            }, {
+                name: 'Rx',
+                data: [],
+                marker: {
+                    symbol: 'circle'
+                }
+            }],
+
+            tooltip: {
+                formatter: function() {
+                    var s = [];
+                      $.each(this.points, function(i, point) {
+                        var bytes = point.y;                          
+                        var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+                        if (bytes == 0) s.push( '<span style="color:' + this.series.color + '; font-size: 1.5em;">' + this.series.symbolUnicode + '</span><b>' + this.series.name + ':</b> 0 bps');
+                        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                        s.push('<span style="color:' + this.series.color + '; font-size: 1.5em;">' + this.series.symbolUnicode + '</span><b>' + this.series.name + ':</b> ' + parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i]);  
+                        });
+                      return '<b>Monitor de tráfico</b><br /><b>Hora: </b>' + Highcharts.dateFormat('%H:%M:%S', new Date(this.x)) + '<br />'  + s.join(' <br/> ');
+                },
+                shared: true
+            },
+        });
+    });
+}
 </script>
 {% endblock %}

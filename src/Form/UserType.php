@@ -35,56 +35,58 @@ class UserType extends AbstractType
             ->add('macAddress', null, [
                 'label' => 'Dirección MAC',
                 'required' => $this->api->getRouter()->getHotspotloginType() === Router::LOGIN_TYPE_MAC_AS_USER_AND_PASS,
-               'attr' => ['placeholder' => '00:00:00:00:00:00','style'=>'font-size:20px']
+                'attr' => ['placeholder' => '00:00:00:00:00:00', 'style' => 'font-size:20px']
             ])
             ->add('username', null, [
-                'label' => 'Usuario'
-            ])
-        
-            ->add('plainPassword',null, [
-                'label' => 'Contraseña',
-                'required' => true
+                'label' => 'Usuario',
+                'attr' => ['style' => 'font-size:20px']
             ])
 
-            ->add('isLocal', CheckboxType::class,[
-                'label'=>'Acceso a la plataforma',
+            ->add('plainPassword', null, [
+                'label' => 'Contraseña',
+                'required' => true,
+                'attr' => ['style' => 'font-size:20px']
+            ])
+
+            ->add('isLocal', CheckboxType::class, [
+                'label' => 'Acceso a la plataforma',
                 'required' => false
             ])
 
-           
 
-            ->add('comment',null,[
+
+            ->add('comment', null, [
                 'mapped' => false,
                 'label' => 'Comentario',
+                'attr' => ['style' => 'font-size:20px']
             ])
 
-            ->add('profile',EntityType::class,[
+            ->add('profile', EntityType::class, [
                 'label' => 'Perfil',
                 'class' => UserProfile::class,
-                'query_builder' => function(EntityRepository $e){
-                    if($this->security->isGranted('ROLE_SUPER_ADMIN'))
+                'query_builder' => function (EntityRepository $e) {
+                    if ($this->security->isGranted('ROLE_SUPER_ADMIN'))
                         return $e->createQuerybuilder('p');
                     return $e->createQuerybuilder('p')
                         ->where('p.roles LIKE :r')
-                        ->setParameter('r','%ROLE_USER%')
-                        
-                    ;
+                        ->setParameter('r', '%ROLE_USER%');
                 }
-            ])   
-        ;
-        if($this->security->isGranted('ROLE_SUPER_ADMIN')){
-            $builder->add('time', IntegerType::class,[
-                'mapped' => false,
-                'label' => 'Crédito inicial',
             ]);
-        }else{
-            $builder->add('time', IntegerType::class,[
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+            $builder->add('time', IntegerType::class, [
                 'mapped' => false,
                 'label' => 'Crédito inicial',
+                'attr' => ['style' => 'font-size:20px']
+            ]);
+        } else {
+            $builder->add('time', IntegerType::class, [
+                'mapped' => false,
+                'label' => 'Crédito inicial',
+                'attr' => ['style' => 'font-size:20px'],
                 'constraints' => [
                     new Range([
                         'min' => 1,
-                        
+
                     ])
                 ]
             ]);

@@ -44,6 +44,7 @@ import 'select2'
 import 'select2/dist/css/select2.min.css'
 
 /* Configurando el idioma español para todas las tablas */
+$.fn.dataTable.ext.errMode = 'none';
 $.extend(true, $.fn.dataTable.defaults, {
     language: {
       sProcessing:

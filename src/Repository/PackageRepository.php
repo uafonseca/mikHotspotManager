@@ -32,27 +32,26 @@ class PackageRepository extends ServiceEntityRepository
     public function createdToday(User $user, bool $check = true)
     {
         $qb = $this->createQueryBuilder('p')
-            
+
             ->andWhere('MONTH(p.createdAt) = :m')
             ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
             ->setParameter('m', date('m'))
             ->setParameter('y', date('Y'))
-            ->setParameter('d', date('d'))
-        ;
+            ->setParameter('d', date('d'));
         if ($check) {
             $qb
-            ->select('sum(p.price)')
-            ->andWhere('p.createdBy = :user')
-            ->setParameter('user', $user);
+                ->select('sum(p.price)')
+                ->andWhere('p.createdBy = :user')
+                ->setParameter('user', $user);
         } else {
             $qb
-            ->select('sum(p.price)')
-            ->join('p.createdBy', 'user')
-            ->andWhere('p.createdBy <> :user')
-            ->setParameter('user', $user);
+                ->select('sum(p.price)')
+                ->join('p.createdBy', 'user')
+                ->andWhere('p.createdBy <> :user')
+                ->setParameter('user', $user);
         }
         return $qb->getQuery()
-                ->getResult();
+            ->getResult();
     }
 
     /**
@@ -87,15 +86,15 @@ class PackageRepository extends ServiceEntityRepository
 
             $date = new DateTime($filters['fecha']);
             $qb
-            ->andWhere('MONTH(p.createdAt) = :m')
-            ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
-            ->setParameter('m',  $date->format('m'))
-            ->setParameter('d', $date->format('d'))
-            ->setParameter('y', $date->format('Y'));
+                ->andWhere('MONTH(p.createdAt) = :m')
+                ->andWhere('YEAR(p.createdAt) = :y AND DAY(p.createdAt) =:d')
+                ->setParameter('m',  $date->format('m'))
+                ->setParameter('d', $date->format('d'))
+                ->setParameter('y', $date->format('Y'));
         }
 
         return $qb->getQuery()
-            ->getResult();  
+            ->getResult();
     }
 
     /**
@@ -108,25 +107,24 @@ class PackageRepository extends ServiceEntityRepository
     public function createdThisMonth(User $user, bool $check = true)
     {
         $qb = $this->createQueryBuilder('p')
-        
+
             ->andWhere('MONTH(p.createdAt) = :m')
             ->andWhere('YEAR(p.createdAt) = :y')
             ->setParameter('m', date('m'))
-            ->setParameter('y', date('Y'))
-        ;
+            ->setParameter('y', date('Y'));
         if ($check) {
             $qb
-            ->select('sum(p.price)')
-            ->andWhere('p.createdBy = :user')
-            ->setParameter('user', $user);
+                ->select('sum(p.price)')
+                ->andWhere('p.createdBy = :user')
+                ->setParameter('user', $user);
         } else {
             $qb
-            ->select('sum(p.price)')
-            ->andWhere('p.createdBy <> :user')
-            ->setParameter('user', $user);
+                ->select('sum(p.price)')
+                ->andWhere('p.createdBy <> :user')
+                ->setParameter('user', $user);
         }
         return $qb->getQuery()
-                ->getResult();
+            ->getResult();
     }
 
     public function myDebts(User $user)
@@ -140,8 +138,25 @@ class PackageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    
-    
+    /**
+     * Undocumented function
+     *
+     * @param string $username
+     * @return void
+     */
+    public function findByUsername(User $user)
+    {
+        return $this->createQueryBuilder('d')
+            ->select('sum(d.price) as deuda')
+            ->join('d.user', 'user')
+            ->where('user =:user')
+            ->andWhere('d.debt =:t')
+            ->setParameter('t', true)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Package

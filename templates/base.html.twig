@@ -1,74 +1,78 @@
 {% extends '@AdminLTE/layout/default-layout-avanzu.html.twig' %}
-{% block title %}
-{% endblock %}
+{% block title %}{% endblock %}
 {% block page_title %}
-    <strong style="margin-left: 10px;"> HOTSPOT-MANAGER</strong>
+	<strong style="margin-left: 10px;">
+		HOTSPOT-MANAGER</strong>
 {% endblock %}
 {% block page_subtitle %}
-V.1.0
+	V.1.0
 {% endblock %}
 {% block logo_large %}
-    <img src="{{asset('build/assets/images/logo.png')}}" width="150" alt="">
+	<img src="{{asset('build/assets/images/logo.png')}}" width="150" alt="">
 {% endblock logo_large %}
 {% block head %}
-    {{ parent() }}
-    <link rel="icon" href="{{asset('build/assets/images/favico.png')}}" type="image/x-icon">
+	{{ parent() }}
+	<link rel="icon" href="{{asset('build/assets/images/favico.png')}}" type="image/x-icon">
 {% endblock %}
 
 {% block stylesheets %}
-{{parent()}}
-{{ encore_entry_link_tags('app') }}
-<style>
-    a:link {
-        text-decoration: none;
-    }
-</style>
+	{{parent()}}
+	{{ encore_entry_link_tags('app') }}
+	<style>
+		a:link {
+			text-decoration: none;
+		}
+	</style>
 {% endblock %}
 
 
 {% block javascripts %}
-{{parent()}}
-<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-{{ encore_entry_script_tags('app') }}
+	{{parent()}}
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	{{ encore_entry_script_tags('app') }}
 
-{% set alert = {'success': 'success', 'error': 'error', 'info': 'info', 'warning': 'warning'} %}
-{% for flashType in alert %}
-{% for flashMessage in app.session.flashbag.get(flashType) %}
+	{% set alert = {'success': 'success', 'error': 'error', 'info': 'info', 'warning': 'warning'} %}
+	{% for flashType in alert %}
+		{% for flashMessage in app.session.flashbag.get(flashType) %}
 
-<script>
-    $(document).ready(function () {
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": true,
-            "progressBar": false,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "400",
-            "hideDuration": "800",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "slideDown",
-            "hideMethod": "slideUp"
-        };
-        toastr["{{ alert[flashType] }}"]("{{ flashMessage | raw }}");
-    })
-</script>
-{% endfor %}
-{% endfor %}
+			<script>
+				$(document).ready(function () {
+toastr.options = {
+"closeButton": true,
+"debug": false,
+"newestOnTop": true,
+"progressBar": false,
+"positionClass": "toast-top-right",
+"preventDuplicates": false,
+"onclick": null,
+"showDuration": "400",
+"hideDuration": "800",
+"timeOut": "5000",
+"extendedTimeOut": "1000",
+"showEasing": "swing",
+"hideEasing": "linear",
+"showMethod": "slideDown",
+"hideMethod": "slideUp"
+};
+toastr["{{ alert[flashType] }}"]("{{ flashMessage | raw }}");
+})
+			</script>
+		{% endfor %}
+	{% endfor %}
 {% endblock %}
 
 {% block footer %}
-    <footer class="main-footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">
-        Soporte <a href="mailto:ubelangelfonseca@gmail.com">ubelangelfonseca@gmail.com</a>
-    </div>
-    <!-- Default to the left -->
-    <strong>UFC &copy; 2021 <a href="https://fb.com/uafonseca">UFC</a>.</strong> Todos los derechos reservados.
-</footer>
+	<footer
+		class="main-footer">
+		<!-- To the right -->
+		<div class="pull-right hidden-xs">
+			Soporte
+			<a href="mailto:ubelangelfonseca@gmail.com">ubelangelfonseca@gmail.com</a>
+		</div>
+		<!-- Default to the left -->
+		<strong>UFC &copy; 2021
+			<a href="https://fb.com/uafonseca">UFC</a>.</strong>
+		Todos los derechos reservados.
+	</footer>
 {% endblock footer %}

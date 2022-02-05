@@ -28,20 +28,17 @@ class MainController extends AbstractController
      */
     public function index(RouterRepository $routerRepository): Response
     {
-        // dd($count = $this->api->comm("/ip/hotspot/cookie/print", [
-            
-        // ]));
 
         if (count($routerRepository->findAll()) === 0) {
             $this->addFlash('error', 'Es necesario configurar su router');
             return $this->redirectToRoute('router_new');
         }
         $count = $this->api->comm("/ip/hotspot/user/print", [
-            'count-only'=>""
+            'count-only' => ""
         ]);
 
         $interface = $this->api->getRouter()->getInterface();
-        
+
         return $this->render('main/index.html.twig', [
             'count' => $count,
             'interface' => $interface
@@ -61,7 +58,7 @@ class MainController extends AbstractController
      * 
      * @Route("/ping", name="ping", methods={"POST","GET"}, options={"expose" = true})
      */
-    public function ping($url='https://1.1.1.1')
+    public function ping($url = 'https://1.1.1.1')
     {
         $result = false;
         if ($url == null) {
@@ -90,18 +87,19 @@ class MainController extends AbstractController
      * 
      * @Route("/debts", name="debts")
      */
-    public function myDebts(Request $request){
-        
+    public function myDebts(Request $request)
+    {
+
         $em = $this->getDoctrine()->getManager();
 
-        if(null != $idPay = $request->query->get('pay') ){
+        if (null != $idPay = $request->query->get('pay')) {
             $pack = $em->getRepository(Package::class)->find($idPay);
             $pack->setDebt(false);
             $em->flush();
 
             return $this->redirectToRoute('debts');
         }
-        
+
 
         $debts = $em->getRepository(Package::class)->myDebts($this->getUser());
 
